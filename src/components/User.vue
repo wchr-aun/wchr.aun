@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    {{currentUser}}
+    {{currentUser.email}}
   </div>
 </template>
 

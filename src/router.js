@@ -4,6 +4,7 @@ import Home from './components/Home.vue'
 import Register from './components/Register.vue'
 import firebase from './components/firebase.js'
 import User from './components/User.vue'
+import About from './components/About.vue'
 
 Vue.use(Router)
 
@@ -15,6 +16,11 @@ let router =  new Router({
       path: '/',
       name: 'home',
       component: Home
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: About
     },
     {
       path: '/register',

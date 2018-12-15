@@ -3,7 +3,7 @@
     <div class="notification">
       <br><br>
       <div class="title is-2">Welcome to Azwraith.me,</div>
-      <div class="subtitle is-3">{{user}}</div>
+      <div class="subtitle is-3">You are now logging in as {{user}}</div>
       <br><br>
     </div>
   </div>

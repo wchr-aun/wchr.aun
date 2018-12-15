@@ -15,7 +15,7 @@
           <a class="navbar-item" href="https://sgws.azwraith.me">SGWS</a>
         </div>
       </div>
-      <div class="navbar-item"><router-link to="/" class="has-text-white-ter">About Me</router-link></div>
+      <div class="navbar-item"><router-link to="/about" class="has-text-white-ter">About Me</router-link></div>
     </div>
 
     <div class="navbar-end">
