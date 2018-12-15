@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    Hello
+    
   </div>
 </template>
 
@@ -9,7 +9,7 @@ export default {
   name: 'Home',
   data () {
     return {
-      
+
     }
   },
   computed: {

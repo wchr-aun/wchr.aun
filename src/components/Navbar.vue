@@ -4,11 +4,13 @@
     <router-link to="/" class="navbar-item"><h5 class="title is-5 has-text-white-ter">Azwraith.me</h5></router-link>
   </div>
 
-  <div id="navbarBasicExample" class="navbar-menu has-text-white">
+  <div class="navbar-menu has-text-white">
     <div class="navbar-start">
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link">Projects</a>
         <div class="navbar-dropdown">
+          <a class="navbar-item">Information</a>
+          <hr class="navbar-divider">
           <a class="navbar-item" href="https://vcabb.azwraith.me">VC-ABB</a>
           <a class="navbar-item" href="https://sgws.azwraith.me">SGWS</a>
         </div>
@@ -30,11 +32,24 @@
     <div class="modal-content">
       <div class="notification has-background-white-ter">
         <div class="is-size-4">Login</div>
-        <input class="input" type="text" placeholder="Email">
-        <input class="input" type="text" placeholder="Password">
-        <br><br>
-        <a class="button is-info is-fullwidth">Login <i class="fas fa-sign-in-alt"></i></a>or
-        <a class="button is-primary is-fullwidth">Sign Up <i class="fas fa-user-plus"></i></a>
+        <div class="field">
+          <p class="control has-icons-left has-icons-right">
+            <input v-model="email" class="input" type="email" placeholder="Email" autocomplete="off">
+            <span class="icon is-small is-left">
+              <i class="fas fa-envelope"></i>
+            </span>
+          </p>
+        </div>
+        <div class="field">
+          <p class="control has-icons-left">
+            <input v-model="password" class="input" type="password" placeholder="Password" @keydown.enter="login">
+            <span class="icon is-small is-left">
+              <i class="fas fa-lock"></i>
+            </span>
+          </p>
+        </div>
+        <a class="button is-info is-fullwidth" @click="login">Login <i class="fas fa-sign-in-alt"></i></a>or
+        <router-link to="/register" style="text-decoration: none;"><div class="button is-primary is-fullwidth" @click="untoggle">Register <i class="fas fa-user-plus"></i></div></router-link>
       </div>
     </div>
     <button class="modal-close is-large" aria-label="close" @click="untoggle"></button>
@@ -43,7 +58,14 @@
 </template>
 
 <script>
+import firebase from './firebase'
 export default {
+  data () {
+    return {
+      email: '',
+      password: ''
+    }
+  },
   methods: {
     toggle () {
         document.querySelector('.modal').classList.add('is-active')
@@ -52,6 +74,16 @@ export default {
     untoggle () {
         document.querySelector('.modal').classList.remove('is-active');
         document.querySelector('html').classList.remove('is-clipped');
+    },
+    login () {
+      firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(user => {
+        alert('Login Succeeded')
+        this.untoggle()
+        this.$router.push('/')
+      },
+      err => {
+        alert(err.message)
+      })
     }
   }
 }
