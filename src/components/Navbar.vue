@@ -19,9 +19,11 @@
     </div>
 
     <div class="navbar-end">
+      <router-link to="/user" v-if="isLoggedIn" class="navbar-item">{{currentUser.email}}</router-link>
       <div class="navbar-item">
         <div class="buttons">
-          <a class="button is-light" @click="toggle">Login</a>
+          <a v-if="!isLoggedIn" class="button is-light" @click="toggle">Login</a>
+          <a v-if="isLoggedIn" class="button is-light" @click="logout">Logout</a>
         </div>
       </div>
     </div>
@@ -62,8 +64,16 @@ import firebase from './firebase'
 export default {
   data () {
     return {
+      isLoggedIn: false,
+      currentUser: false,
       email: '',
       password: ''
+    }
+  },
+  created () {
+    if(firebase.auth().currentUser) {
+      this.currentUser = firebase.auth().currentUser
+      this.isLoggedIn = true
     }
   },
   methods: {
@@ -77,12 +87,16 @@ export default {
     },
     login () {
       firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(user => {
-        alert('Login Succeeded')
         this.untoggle()
-        this.$router.push('/')
+        this.$router.go()
       },
       err => {
         alert(err.message)
+      })
+    },
+    logout () {
+      firebase.auth().signOut().then(noData => {
+        this.$router.go()
       })
     }
   }
