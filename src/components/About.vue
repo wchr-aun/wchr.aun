@@ -40,12 +40,12 @@
         <div class="column is-3 is-offset-8">
           <div class="field is-horizontal">
             <div class="field-label is-normal">
-              <label class="label">Email:</label>
+              <label class="label">DisplayName:</label>
             </div>
             <div class="field-body">
               <div class="field">
                 <p class="control">
-                  <input class="input" type="text" v-model.trim="email" readonly>
+                  <input class="input" type="text" v-model.trim="displayName" disabled>
                 </p>
               </div>
             </div>
@@ -60,7 +60,7 @@
       <div class="box">
         <div class="has-text-left">
           #{{comment.id}} | 
-          <small>Posted by: &lt;{{comment.data().postedby}}&gt;</small>
+          <small>Posted by: {{comment.data().postedbyDisplayName}} <i class="fas fa-users" v-if="comment.data().postedbyDisplayName === 'admin'"></i> &lt;{{comment.data().postedbyEmail}}&gt;</small>
           <div class="is-size-7">Posted at: {{timeStampToText(comment.data().postedat)}}</div>
         </div><hr>
         <div class="notification has-background-grey-lighter">
@@ -81,6 +81,7 @@ export default {
   name: 'about',
   data () {
     return {
+      displayName: '',
       email: 'undefined',
       post: '',
       comments: [],
@@ -91,6 +92,7 @@ export default {
     if(firebase.auth().currentUser) {
       this.isLoggedIn = true
       this.email = firebase.auth().currentUser.email
+      this.displayName = firebase.auth().currentUser.displayName
     }
     firebase.firestore().collection("comments").orderBy("postedat", "desc").limit(5).get().then(querySnapshot => {
       querySnapshot.forEach(doc => {
@@ -102,7 +104,8 @@ export default {
     postComment () {
       firebase.firestore().collection("comments").add({
         post: this.post,
-        postedby: this.email,
+        postedbyEmail: this.email,
+        postedbyDisplayName: this.displayName,
         postedat: new Date()
       }).then(() => {
         this.$router.go()
@@ -115,7 +118,7 @@ export default {
       let timeStamp = new Date(time.seconds * 1000 + time.nanoseconds / 1000000)
       let Day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat']
       let Month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-      return Day[timeStamp.getDay()] + ', ' + Month[timeStamp.getMonth()] + ' ' + timeStamp.getDate()  + ',' + timeStamp.getFullYear() + ' at ' + timeStamp.getHours() + ':' + ('0' + timeStamp.getMinutes()).slice(-2) + ':' + ('0' + timeStamp.getSeconds()).slice(-2)
+      return Day[timeStamp.getDay()] + ', ' + Month[timeStamp.getMonth()] + ' ' + timeStamp.getDate()  + ',' + timeStamp.getFullYear() + ' at ' + ('0' + timeStamp.getHours()).slice(-2) + ':' + ('0' + timeStamp.getMinutes()).slice(-2) + ':' + ('0' + timeStamp.getSeconds()).slice(-2)
     }
   }
 }
