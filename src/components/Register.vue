@@ -45,6 +45,7 @@ export default {
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(user => {
         alert('Success Creating the Account')
         this.$router.push('/')
+        this.$router.go()
       },
       err => {
         alert(err.message)
