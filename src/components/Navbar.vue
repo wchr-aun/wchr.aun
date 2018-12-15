@@ -2,20 +2,23 @@
   <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <router-link to="/" class="navbar-item"><h5 class="title is-5 has-text-white-ter">Azwraith.me</h5></router-link>
+    <a id="burgerd" role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" @click="dropdown">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
   </div>
 
-  <div class="navbar-menu has-text-white">
+  <div id="navbarBasicExample" class="navbar-menu has-text-white">
     <div class="navbar-start">
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link">Projects</a>
         <div class="navbar-dropdown">
-          <a class="navbar-item">Information</a>
-          <hr class="navbar-divider">
           <a class="navbar-item" href="https://vcabb.azwraith.me">VC-ABB</a>
           <a class="navbar-item" href="https://sgws.azwraith.me">SGWS</a>
         </div>
       </div>
-      <div class="navbar-item"><router-link to="/about" class="has-text-white-ter">About Me</router-link></div>
+      <router-link to="/about" class="navbar-item">About Me</router-link>
     </div>
 
     <div class="navbar-end">
@@ -98,6 +101,16 @@ export default {
       firebase.auth().signOut().then(noData => {
         this.$router.go()
       })
+    },
+    dropdown () {
+      if ($('#burgerd').hasClass('is-active')){
+        document.querySelector('.navbar-burger').classList.remove('is-active')
+        document.querySelector('.navbar-menu').classList.remove('is-active')
+      }
+      else{
+        document.querySelector('.navbar-burger').classList.add('is-active')
+        document.querySelector('.navbar-menu').classList.add('is-active')
+      }
     }
   }
 }

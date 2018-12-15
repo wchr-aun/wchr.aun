@@ -60,16 +60,16 @@
       <div class="box">
         <div class="has-text-left">
           #{{comment.id}} | 
-          <small>Posted by: <{{comment.data().postedby}}></small>
+          <small>Posted by: &lt;{{comment.data().postedby}}&gt;</small>
           <div class="is-size-7">Posted at: {{timeStampToText(comment.data().postedat)}}</div>
         </div><hr>
         <div class="notification has-background-grey-lighter">
           <div class="columns">
-            <div class="column is-1 has-text-right">Comment:</div>
+            <div class="column is-1 has-text-right is-hidden-touch">Comment:</div>
             <div class="column is-10 has-text-left">{{comment.data().post}}</div>
           </div>
         </div>
-      </div>
+      </div><small></small>
     </div>
 
   </div>
