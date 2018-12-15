@@ -33,7 +33,8 @@
     <div id="commentSection" class="box" v-if="isLoggedIn">
       <div class="field">
         <div class="control">
-          <textarea v-model="post" class="textarea" placeholder="Text Area"></textarea>
+          <textarea v-model="post" v-if="verified" class="textarea" placeholder="Text Area"></textarea>
+          <textarea v-model="post" v-if="!verified" class="textarea" placeholder="Please Verify Your Email to Comment" disabled></textarea>
         </div>
       </div>
       <div class="columns">
@@ -51,7 +52,10 @@
             </div>
           </div>
         </div>
-        <div class="column is-1"><a class="button is-primary" @click="postComment">Post</a></div>
+        <div class="column is-1">
+          <a class="button is-primary" v-if="verified" @click="postComment">Post</a>
+          <a class="button is-primary" v-if="!verified" @click="postComment" disabled>Post</a>
+        </div>
       </div>
     </div>
     <div v-if="!isLoggedIn" class="box">— Please Login to Comment —</div>
@@ -60,14 +64,23 @@
       <div class="box">
         <div class="has-text-left">
           #{{comment.id}} | 
-          <small>Posted by: {{comment.data().postedbyDisplayName}} <i class="fas fa-users" v-if="comment.data().postedbyDisplayName === 'admin'"></i> &lt;{{comment.data().postedbyEmail}}&gt;</small>
+          <small>Posted by:
+            <span style="color: #ffa22c; font-weight: bold;" v-if="comment.data().postedbyDisplayName === 'admin'">
+              {{comment.data().postedbyDisplayName}} <i class="fas fa-users" ></i>
+            </span>
+            <span style="font-weight: bold;" v-if="comment.data().postedbyDisplayName === 'anaunz'">
+              {{comment.data().postedbyDisplayName}} <i class="fas fa-user"></i>
+            </span>
+            <span v-if="comment.data().postedbyDisplayName !== 'admin' && comment.data().postedbyDisplayName !== 'anaunz'">
+              {{comment.data().postedbyDisplayName}}
+            </span>
+            &lt;{{comment.data().postedbyEmail}}&gt;
+          </small>
           <div class="is-size-7">Posted at: {{timeStampToText(comment.data().postedat)}}</div>
         </div><hr>
-        <div class="notification has-background-grey-lighter">
-          <div class="columns">
-            <div class="column is-1 has-text-right is-hidden-touch">Comment:</div>
-            <div class="column is-10 has-text-left">{{comment.data().post}}</div>
-          </div>
+        <div class="columns">
+          <div class="column is-1 has-text-right is-hidden-touch">Context:</div>
+          <div class="column is-10 has-text-left">{{comment.data().post}}</div>
         </div>
       </div><small></small>
     </div>
@@ -85,7 +98,8 @@ export default {
       email: 'undefined',
       post: '',
       comments: [],
-      isLoggedIn: false
+      isLoggedIn: false,
+      verified: false
     }
   },
   created () {
@@ -93,6 +107,7 @@ export default {
       this.isLoggedIn = true
       this.email = firebase.auth().currentUser.email
       this.displayName = firebase.auth().currentUser.displayName
+      this.verified = firebase.auth().currentUser.emailVerified
     }
     firebase.firestore().collection("comments").orderBy("postedat", "desc").limit(5).get().then(querySnapshot => {
       querySnapshot.forEach(doc => {

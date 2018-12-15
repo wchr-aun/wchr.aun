@@ -31,8 +31,14 @@
         </tr>
         <tr>
           <td><i class="fas fa-check-circle"></i> Email Verified</td>
-          <td>{{verified}}</td>
-          <td><a class="button is-small" @click="toggle('verifyEmail')">Verify</a></td>
+          <td>
+            <div v-if="verified">Verified</div>
+            <div v-if="!verified">Not Verified</div>
+          </td>
+          <td>
+            <a class="button is-small" v-if="verified === false" @click="verifyEmail">Verify</a>
+            <a class="button is-small" v-if="verified === true" disabled>Verify</a>
+          </td>
         </tr>
         <tr>
           <td><i class="fas fa-image"></i> Photo</td>
@@ -59,13 +65,6 @@
         </div>
       </div>
       <button class="modal-close is-large" aria-label="close" @click="untoggle('changeDisplayName')"></button>
-    </div>
-    <div id="verifyEmail" class="modal">
-      <div class="modal-background"></div>
-      <div class="modal-content">
-        <!-- Any other Bulma elements you want -->
-      </div>
-      <button class="modal-close is-large" aria-label="close" @click="untoggle('verifyEmail')"></button>
     </div>
     <div id="uploadPhoto" class="modal">
       <div class="modal-background"></div>
@@ -135,6 +134,13 @@ export default {
           alert('Error happened: ' + err)
         })
       }
+    },
+    verifyEmail () {
+      return firebase.auth().currentUser.sendEmailVerification().then(() => {
+        alert('Verification email has been sent.')
+      }).catch(err => {
+        alert('Error happened: ' + err)
+      })
     }
   }
 }
