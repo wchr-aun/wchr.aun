@@ -42,7 +42,9 @@
         </tr>
         <tr>
           <td><i class="fas fa-image"></i> Photo</td>
-          <td>{{photoURL}}</td>
+          <td>
+            <img v-bind:src="photoURL" width="300">
+          </td>
           <td><a class="button is-small" @click="toggle('uploadPhoto')">Upload</a></td>
         </tr>
       </tbody>
@@ -69,7 +71,30 @@
     <div id="uploadPhoto" class="modal">
       <div class="modal-background"></div>
       <div class="modal-content">
-        <!-- Any other Bulma elements you want -->
+        <div class="notification">
+          <div class="file has-name is-right is-fullwidth">
+            <label class="file-label">
+              <input class="file-input" v-on:change="chooseFile" type="file" name="resume">
+              <span class="file-cta">
+                <span class="file-icon">
+                  <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                  Choose a file…
+                </span>
+              </span>
+              <span class="file-name">
+                File name...
+              </span>
+            </label>
+          </div>
+          <br>
+          <img src="#" id="previewPhoto" width="300" style="display: none"/>
+          <p class="buttons is-centered">
+            <a id="uploadButton" class="button is-primary" @click="uploadFile('upload')">Upload</a>
+            <a class="button" @click="uploadFile('cancel')">Cancel</a>
+          </p>
+        </div>
       </div>
       <button class="modal-close is-large" aria-label="close" @click="untoggle('uploadPhoto')"></button>
     </div>
@@ -88,6 +113,7 @@ export default {
       verified: false,
       created: 0,
       lastLogin: 0,
+      photoFile: '',
       photoURL: ''
     }
   },
@@ -141,6 +167,50 @@ export default {
       }).catch(err => {
         alert('Error happened: ' + err)
       })
+    },
+    chooseFile () {
+      let input = document.querySelector('.file-input')
+      let patt = new RegExp(/\.(jpeg|jpg|gif|png)$/)
+      if (patt.test(input.files[0].name)) {
+        if (input.files[0].size < 1048576) {
+          let file = new FileReader()
+          file.readAsDataURL(input.files[0])
+          this.photoFile = input.files[0]
+          document.querySelector('.file-name').innerHTML = this.photoFile.name
+          document.getElementById('previewPhoto').style.display = 'inline'
+          file.onload = function (e) {
+            document.getElementById("previewPhoto").src = e.target.result
+          }
+        }
+        else alert('The file must not larger than 1MB.')
+      }
+      else alert('The file is not a photo.')
+    },
+    uploadFile (command) {
+      if (command === 'cancel') {
+        document.querySelector('.file-input').value = ''
+        this.photoFile = ''
+        document.getElementById('previewPhoto').style.display = 'none'
+        document.querySelector('.file-name').innerHTML = 'File name...'
+      }
+      else {
+        document.querySelector('#uploadButton').classList.add('is-loading')
+        firebase.storage().ref('images/photo_of_' + this.email).put(this.photoFile).then(snapshot => {
+          document.querySelector('#uploadButton').classList.remove('is-loading')
+          alert('Uploaded success!')
+          snapshot.ref.getDownloadURL().then(url => {
+            return firebase.auth().currentUser.updateProfile({
+              photoURL: url
+            }).then(() => {
+              this.$router.go()
+            }).catch(err => {
+              alert('Error happened: ' + err)
+            })
+          })
+        }).catch(err => {
+          alert('Error happened: ' + err)
+        })
+      }
     }
   }
 }

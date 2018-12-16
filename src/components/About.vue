@@ -46,7 +46,7 @@
             <div class="field-body">
               <div class="field">
                 <p class="control">
-                  <input class="input" type="text" v-model.trim="displayName" disabled>
+                  <input class="input" type="text" v-model.trim="showDisplayName" disabled>
                 </p>
               </div>
             </div>
@@ -54,7 +54,7 @@
         </div>
         <div class="column is-1">
           <a class="button is-primary" v-if="verified" @click="postComment">Post</a>
-          <a class="button is-primary" v-if="!verified" @click="postComment" disabled>Post</a>
+          <a class="button is-primary" v-if="!verified" disabled>Post</a>
         </div>
       </div>
     </div>
@@ -94,6 +94,7 @@ export default {
   name: 'about',
   data () {
     return {
+      showDisplayName: '',
       displayName: '',
       email: 'undefined',
       post: '',
@@ -107,6 +108,7 @@ export default {
       this.isLoggedIn = true
       this.email = firebase.auth().currentUser.email
       this.displayName = firebase.auth().currentUser.displayName
+      this.showDisplayName = this.displayName
       this.verified = firebase.auth().currentUser.emailVerified
     }
     firebase.firestore().collection("comments").orderBy("postedat", "desc").limit(5).get().then(querySnapshot => {
