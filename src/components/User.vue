@@ -31,13 +31,10 @@
         </tr>
         <tr>
           <td><i class="fas fa-check-circle"></i> Email Verified</td>
+          <td>{{verified}}</td>
           <td>
-            <div v-if="verified">Verified</div>
-            <div v-if="!verified">Not Verified</div>
-          </td>
-          <td>
-            <a class="button is-small" v-if="verified === false" @click="verifyEmail">Verify</a>
-            <a class="button is-small" v-if="verified === true" disabled>Verify</a>
+            <a class="button is-small" v-if="verified === 'Not Verified'" @click="verifyEmail">Verify</a>
+            <a id="verifybutton" class="button is-small tooltip" data-tooltip="In case of can't comment due to permission denied" v-if="verified === 'Verified'" @click="retoken">Retoken</a>
           </td>
         </tr>
         <tr>
@@ -107,10 +104,11 @@ export default {
   name: 'user',
   data () {
     return{
+      uid: '',
       displayName: '',
       changeDN: '',
       email: '',
-      verified: false,
+      verified: 'Not Verified',
       created: 0,
       lastLogin: 0,
       photoFile: '',
@@ -120,10 +118,13 @@ export default {
   created () {
     if(firebase.auth().currentUser) {
       let c = firebase.auth().currentUser
+      this.uid = c.uid
       this.displayName = c.displayName
       this.changeDN = c.displayName
       this.email = c.email
-      this.verified = c.emailVerified
+      if (c.emailVerified) {
+        this.verified = 'Verified'
+      }
       this.created = c.metadata.a
       this.lastLogin = c.metadata.b
       this.photoURL = c.photoURL
@@ -144,26 +145,33 @@ export default {
       document.querySelector('html').classList.remove('is-clipped')
     },
     changeDisplayName () {
-      if (this.changeDN.toLowerCase() === 'anaun' || this.changeDN.toLowerCase() === 'anaunz' || this.changeDN.toLowerCase() === 'admin') {
+      if (this.changeDN.toLowerCase() === 'admin') {
         alert('You can\'t change to that name')
         this.changeDisplayName = this.displayName
-        return 0
+        return false
       }
       else {
         this.displayName = this.changeDN
         return firebase.auth().currentUser.updateProfile({
           displayName: this.displayName
         }).then(() => {
-          alert('Changed Display Name')
-          this.untoggle('changeDisplayName')
+          firebase.firestore().collection("users").doc(this.uid).update({
+            displayName: this.displayName
+          }).then(() => {
+            alert('Changed Display Name')
+            this.untoggle('changeDisplayName')
+          }).catch(err => {
+            alert('Error happened: ' + err)
+          })
         }).catch(err => {
           alert('Error happened: ' + err)
         })
       }
     },
     verifyEmail () {
+      document.querySelector('#verifybutton').disabled
       return firebase.auth().currentUser.sendEmailVerification().then(() => {
-        alert('Verification email has been sent.')
+        alert('Verification email has been sent. If it\'s not appear, please kindly wait at least 1 min before trying again.')
       }).catch(err => {
         alert('Error happened: ' + err)
       })
@@ -211,6 +219,12 @@ export default {
           alert('Error happened: ' + err)
         })
       }
+    },
+    retoken () {
+      firebase.auth().currentUser.getIdToken(true).then(() => {
+        this.$router.go()
+        return 0
+      })
     }
   }
 }

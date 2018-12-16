@@ -43,9 +43,15 @@ export default {
   methods: {
     register () {
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(user => {
-        alert('Success Creating the Account')
-        this.$router.push('/')
-        this.$router.go()
+        return firebase.firestore().collection('users').doc(user.user.uid).set({
+          displayName: 'dummy'
+        }).then(() => {
+          alert('Success Creating the Account')
+          this.$router.push('/')
+          this.$router.go()
+        }).catch(err => {
+          alert(err.message)
+        })
       },
       err => {
         alert(err.message)

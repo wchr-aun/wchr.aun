@@ -3,7 +3,7 @@
     <div class="subtitle is-5 has-text-left">
        &emsp;&emsp;Well, hi, I am a currently a third year computer engineering student studying at <a href="http://www2.kmutt.ac.th/">KMUTT</a>, 
        yes, the website sucks, who have nothing to do, so I created the website using 
-      <a href="https://vuejs.org/">VueJS</a>, <a href="https://bulma.io/">BulmaCSS</a>, and <a href="https://firebase.google.com/">Firebase</a>.
+      <a href="https://vuejs.org/">VueJS</a>, <a href="https://bulma.io/">BulmaCSS</a>, <a href="https://wikiki.github.io/">Bulma-Extension</a>, <a href="https://fontawesome.com/">FontAwesome</a>, and <a href="https://firebase.google.com/">Firebase</a>.
       This website is created to collect all of websites that're mine or my project group. My contact is down below at the footer of every page
       or, just in case:<br>
     </div>
@@ -65,22 +65,21 @@
         <div class="has-text-left">
           #{{comment.id}} | 
           <small>Posted by:
-            <span style="color: #ffa22c; font-weight: bold;" v-if="comment.data().postedbyDisplayName === 'admin'">
-              {{comment.data().postedbyDisplayName}} <i class="fas fa-users" ></i>
+            <span style="color: #ffa22c; font-weight: bold;" v-if="comment.uid === 'xRHdHzjgJdWFvn8l9pFGvkKo4QX2'">
+              {{comment.postedby}} <i class="fas fa-users" ></i>
             </span>
-            <span style="font-weight: bold;" v-if="comment.data().postedbyDisplayName === 'anaunz'">
-              {{comment.data().postedbyDisplayName}} <i class="fas fa-user"></i>
+            <span style="font-weight: bold;" v-if="comment.uid === 'FoHQDtaFkYWGX2Das3p6GkRSXnS2'">
+              {{comment.postedby}} <i class="fas fa-user"></i>
             </span>
-            <span v-if="comment.data().postedbyDisplayName !== 'admin' && comment.data().postedbyDisplayName !== 'anaunz'">
-              {{comment.data().postedbyDisplayName}}
+            <span v-if="comment.uid !== 'xRHdHzjgJdWFvn8l9pFGvkKo4QX2' && comment.uid !== 'FoHQDtaFkYWGX2Das3p6GkRSXnS2'">
+              {{comment.postedby}}
             </span>
-            &lt;{{comment.data().postedbyEmail}}&gt;
           </small>
-          <div class="is-size-7">Posted at: {{timeStampToText(comment.data().postedat)}}</div>
+          <div class="is-size-7">Posted at: {{timeStampToText(comment.postedat)}}</div>
         </div><hr>
         <div class="columns">
           <div class="column is-1 has-text-right is-hidden-touch">Context:</div>
-          <div class="column is-10 has-text-left">{{comment.data().post}}</div>
+          <div class="column is-10 has-text-left">{{comment.post}}</div>
         </div>
       </div><small></small>
     </div>
@@ -94,6 +93,7 @@ export default {
   name: 'about',
   data () {
     return {
+      uid: '',
       showDisplayName: '',
       displayName: '',
       email: 'undefined',
@@ -104,16 +104,31 @@ export default {
     }
   },
   created () {
+    firebase.auth().currentUser.reload()
     if(firebase.auth().currentUser) {
+      let c = firebase.auth().currentUser
+      this.uid = c.uid
       this.isLoggedIn = true
-      this.email = firebase.auth().currentUser.email
-      this.displayName = firebase.auth().currentUser.displayName
+      this.email = c.email
+      this.displayName = c.displayName
       this.showDisplayName = this.displayName
-      this.verified = firebase.auth().currentUser.emailVerified
+      this.verified = c.emailVerified
     }
     firebase.firestore().collection("comments").orderBy("postedat", "desc").limit(5).get().then(querySnapshot => {
       querySnapshot.forEach(doc => {
-        return this.comments.push(doc)
+        let uid = doc.data().postedby
+        let comment = {
+          id: doc.id,
+          uid: uid,
+          post: doc.data().post,
+          postedat: doc.data().postedat
+        }
+        firebase.firestore().collection("users").doc(uid).get().then(user => {
+          comment.postedby = user.data().displayName
+          return this.comments.push(comment)
+        }).catch(err => {
+          alert('Error happened: ' + err)
+        })
       })
     })
   },
@@ -121,8 +136,7 @@ export default {
     postComment () {
       firebase.firestore().collection("comments").add({
         post: this.post,
-        postedbyEmail: this.email,
-        postedbyDisplayName: this.displayName,
+        postedby: this.uid,
         postedat: new Date()
       }).then(() => {
         this.$router.go()
