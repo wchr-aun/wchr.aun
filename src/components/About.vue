@@ -23,10 +23,8 @@
         </tr>
       </tbody>
     </table>
-    <hr>
-    <div class="subtitle is-6">
-      The section below has nothing to do with the information above, I just want to do a comment section.
-    </div>
+    <br>
+    <div class="is-divider" data-content="The section below has nothing to do with the information above, I just want to do a comment section."></div>
     <br>
 
     <div class="title is-4 has-text-left">Comment Section</div>
@@ -59,21 +57,23 @@
       </div>
     </div>
     <div v-if="!isLoggedIn" class="box">— Please Login to Comment —</div>
-    <hr>
+    <div class="is-divider" data-content="COMMENTS"></div>
     <div v-for="comment in comments" v-bind:key="comment.id">
       <div class="box">
         <div class="has-text-left">
           #{{comment.id}} | 
           <small>Posted by:
-            <span style="color: #ffa22c; font-weight: bold;" v-if="comment.uid === 'xRHdHzjgJdWFvn8l9pFGvkKo4QX2'">
-              {{comment.postedby}} <i class="fas fa-users" ></i>
-            </span>
-            <span style="font-weight: bold;" v-if="comment.uid === 'FoHQDtaFkYWGX2Das3p6GkRSXnS2'">
-              {{comment.postedby}} <i class="fas fa-user"></i>
-            </span>
-            <span v-if="comment.uid !== 'xRHdHzjgJdWFvn8l9pFGvkKo4QX2' && comment.uid !== 'FoHQDtaFkYWGX2Das3p6GkRSXnS2'">
-              {{comment.postedby}}
-            </span>
+            <router-link v-bind:to="{name: 'peekuser', params: {uid: comment.uid}}" style="color:inherit;">
+              <span style="color: #ffa22c; font-weight: bold;" v-if="comment.uid === 'xRHdHzjgJdWFvn8l9pFGvkKo4QX2'">
+                {{comment.postedby}} <i class="fas fa-users" ></i>
+              </span>
+              <span style="font-weight: bold;" v-if="comment.uid === 'FoHQDtaFkYWGX2Das3p6GkRSXnS2'">
+                {{comment.postedby}} <i class="fas fa-user"></i>
+              </span>
+              <span v-if="comment.uid !== 'xRHdHzjgJdWFvn8l9pFGvkKo4QX2' && comment.uid !== 'FoHQDtaFkYWGX2Das3p6GkRSXnS2'">
+                {{comment.postedby}}
+              </span>
+            </router-link>
           </small>
           <div class="is-size-7">Posted at: {{timeStampToText(comment.postedat)}}</div>
         </div><hr>

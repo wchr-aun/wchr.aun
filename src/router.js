@@ -5,6 +5,7 @@ import Register from './components/Register.vue'
 import firebase from './components/firebase.js'
 import User from './components/User.vue'
 import About from './components/About.vue'
+import PeekUser from './components/PeekUser.vue'
 
 Vue.use(Router)
 
@@ -37,7 +38,12 @@ let router =  new Router({
       meta: {
         requiresAuth: true
       }
-    }
+    },
+    {
+      path: '/peekuser/:uid',
+      name: 'peekuser',
+      component: PeekUser
+    },
   ]
 })
 

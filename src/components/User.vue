@@ -44,6 +44,10 @@
           </td>
           <td><a class="button is-small" @click="toggle('uploadPhoto')">Upload</a></td>
         </tr>
+        <tr>
+          <td><i class="fas fa-eye"></i> Peek Yourself</td>
+          <td><router-link v-bind:to="{name: 'peekuser', params: {uid: uid}}">/peekuser/{{uid}}</router-link></td>
+        </tr>
       </tbody>
     </table>
     <div id="changeDisplayName" class="modal">
@@ -81,12 +85,13 @@
                 </span>
               </span>
               <span class="file-name">
-                File name...
+                Photo name...
               </span>
             </label>
           </div>
           <br>
           <img src="#" id="previewPhoto" width="300" style="display: none"/>
+          <progress class="progress is-info" id="uploader" value="0" max="100"></progress>
           <p class="buttons is-centered">
             <a id="uploadButton" class="button is-primary" @click="uploadFile('upload')">Upload</a>
             <a class="button" @click="uploadFile('cancel')">Cancel</a>
@@ -135,7 +140,7 @@ export default {
       let timeStamp = new Date(time)
       let Day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat']
       let Month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-      return Day[timeStamp.getDay()] + ', ' + Month[timeStamp.getMonth()] + ' ' + timeStamp.getDate()  + ',' + timeStamp.getFullYear() + ' at ' + timeStamp.getHours() + ':' + ('0' + timeStamp.getMinutes()).slice(-2) + ':' + ('0' + timeStamp.getSeconds()).slice(-2)
+      return Day[timeStamp.getDay()] + ', ' + Month[timeStamp.getMonth()] + ' ' + timeStamp.getDate()  + ', ' + timeStamp.getFullYear() + ' at ' + ('0' + timeStamp.getHours()).slice(-2) + ':' + ('0' + timeStamp.getMinutes()).slice(-2) + ':' + ('0' + timeStamp.getSeconds()).slice(-2)
     },
     toggle (id) {
       document.querySelector('#' + id).classList.add('is-active')
@@ -199,24 +204,34 @@ export default {
         document.querySelector('.file-input').value = ''
         this.photoFile = ''
         document.getElementById('previewPhoto').style.display = 'none'
-        document.querySelector('.file-name').innerHTML = 'File name...'
+        document.querySelector('.file-name').innerHTML = 'Photo name...'
       }
       else {
         document.querySelector('#uploadButton').classList.add('is-loading')
-        firebase.storage().ref('images/photo_of_' + this.email).put(this.photoFile).then(snapshot => {
-          document.querySelector('#uploadButton').classList.remove('is-loading')
-          alert('Uploaded success!')
-          snapshot.ref.getDownloadURL().then(url => {
+        let uploadTask = firebase.storage().ref('images/photo_of_' + this.email).put(this.photoFile)
+        uploadTask.on('state_changed', snapshot => {
+          let percentage = snapshot.bytesTransferred / snapshot.totalBytes * 100
+          document.querySelector("#uploader").value = percentage
+        }, err => {
+          alert('Error happend: ' + err)
+        }, () => {
+          document.querySelector('#uploader').classList.remove('is-info')
+          document.querySelector('#uploader').classList.add('is-primary')
+          uploadTask.snapshot.ref.getDownloadURL().then(url => {
             return firebase.auth().currentUser.updateProfile({
               photoURL: url
             }).then(() => {
-              this.$router.go()
+              firebase.firestore().collection("users").doc(this.uid).update({
+                photoURL: url
+              }).then(() => {
+                document.querySelector('#uploadButton').classList.remove('is-loading')
+                alert('Uploaded success!')
+                this.$router.go()
+              })
             }).catch(err => {
               alert('Error happened: ' + err)
             })
           })
-        }).catch(err => {
-          alert('Error happened: ' + err)
         })
       }
     },
