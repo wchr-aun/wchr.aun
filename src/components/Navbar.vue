@@ -1,5 +1,6 @@
 <template>
   <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
+  <div class="pageloader"><span class="title">Logging In...</span></div>
   <div class="navbar-brand">
     <router-link to="/" class="navbar-item"><h5 class="title is-5 has-text-white-ter">Azwraith.me</h5></router-link>
     <a id="burgerd" role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" @click="dropdown">
@@ -10,7 +11,7 @@
   </div>
 
   <div id="navbarBasicExample" class="navbar-menu has-text-white">
-    <div class="navbar-start">
+    <div class="navbar-start" @click="dropdown">
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link">Projects</a>
         <div class="navbar-dropdown">
@@ -18,10 +19,10 @@
           <a class="navbar-item" href="https://sgws.azwraith.me">SGWS</a>
         </div>
       </div>
-      <router-link to="/about" class="navbar-item">About Me</router-link>
+      <router-link to="/about" class="navbar-item" @click="dropdown">About Me</router-link>
     </div>
 
-    <div class="navbar-end">
+    <div class="navbar-end" @click="dropdown">
       <router-link to="/user" v-if="isLoggedIn" class="navbar-item">{{currentUser.email}}</router-link>
       <div class="navbar-item">
         <div class="buttons">
@@ -33,7 +34,7 @@
   </div>
 
   <div class="modal has-text-black">
-    <div class="modal-background"></div>
+    <div class="modal-background" @click="untoggle"></div>
     <div class="modal-content">
       <div class="notification has-background-white-ter">
         <div class="is-size-4">Login</div>
@@ -85,15 +86,17 @@ export default {
         document.querySelector('html').classList.add('is-clipped')
     },
     untoggle () {
-        document.querySelector('.modal').classList.remove('is-active');
-        document.querySelector('html').classList.remove('is-clipped');
+        document.querySelector('.modal').classList.remove('is-active')
+        document.querySelector('html').classList.remove('is-clipped')
     },
     login () {
+      document.querySelector('.pageloader').classList.add('is-active')
       firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(user => {
         this.untoggle()
         this.$router.go()
       },
       err => {
+        document.querySelector('.pageloader').classList.remove('is-active')
         alert(err.message)
       })
     },

@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <div class="pageloader"><span class="title">Commenting...</span></div>
     <div class="subtitle is-5 has-text-left">
        &emsp;&emsp;Well, hi, I am a currently a third year computer engineering student studying at <a href="http://www2.kmutt.ac.th/">KMUTT</a>, 
        yes, the website sucks, who have nothing to do, so I created the website using 
@@ -104,7 +105,7 @@ export default {
     }
   },
   created () {
-    firebase.auth().currentUser.reload()
+    document.title = 'About | Azwraith.me'
     if(firebase.auth().currentUser) {
       let c = firebase.auth().currentUser
       this.uid = c.uid
@@ -134,16 +135,22 @@ export default {
   },
   methods: {
     postComment () {
-      firebase.firestore().collection("comments").add({
-        post: this.post,
-        postedby: this.uid,
-        postedat: new Date()
-      }).then(() => {
-        this.$router.go()
-        return null
-      }).catch(err => {
-        alert('Error adding document: ' + err)
-      })
+      if(this.post === '' || this.post.length < 3){
+        alert('Comments must not be emptied and more than 3 characters.')
+      }
+      else{
+        document.querySelector('.pageloader').classList.add('is-active')
+        firebase.firestore().collection("comments").add({
+          post: this.post,
+          postedby: this.uid,
+          postedat: new Date()
+        }).then(() => {
+          this.$router.go()
+        }).catch(err => {
+          document.querySelector('.pageloader').classList.remove('is-active')
+          alert('Error adding document: ' + err)
+        })
+      }
     },
     timeStampToText (time) {
       let timeStamp = new Date(time.seconds * 1000 + time.nanoseconds / 1000000)

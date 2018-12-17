@@ -19,6 +19,7 @@ export default {
     }
   },
   created () {
+    document.title = 'Home | Azwraith.me'
     if(firebase.auth().currentUser) {
       this.user = firebase.auth().currentUser.email
     }

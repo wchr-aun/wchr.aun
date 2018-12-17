@@ -11,13 +11,31 @@
       <tbody>
         <tr>
           <td><i class="fas fa-signature"></i> Display Name</td>
-          <td>{{displayName}}</td>
-          <td><a class="button is-small" @click="toggle('changeDisplayName')">Change</a></td>
+          <td>
+            <span v-if="!showChange">{{displayName}}</span>
+            <div v-if="showChange" class="field has-addons">
+              <div class="control">
+                <div class="control has-icons-left">
+                  <input v-model="changeDN" class="input" placeholder="Display Name">
+                  <span class="icon is-left">
+                    <i class="fas fa-signature"></i>
+                  </span>
+                </div>
+              </div>
+              <div class="control">
+                <a class="button is-primary is-outlined" @click="changeDisplayName">Change</a>
+              </div>
+            </div>
+          </td>
+          <td>
+            <a v-if="!showChange" class="button is-small" @click="showChange = !showChange">Change</a>
+            <a v-if="showChange" class="button is-small" @click="showChange = !showChange">Cancel</a>
+          </td>
         </tr>
         <tr>
           <td><i class="fas fa-envelope"></i> Email</td>
           <td>{{email}}</td>
-          <td></td>
+          <td><a class="button is-small tooltip" data-tooltip="Show/Hide email in the peek page" @click="showEmail">Show / Hide</a></td>
         </tr>
         <tr>
           <td><i class="fas fa-plus-square"></i> Created At</td>
@@ -47,30 +65,12 @@
         <tr>
           <td><i class="fas fa-eye"></i> Peek Yourself</td>
           <td><router-link v-bind:to="{name: 'peekuser', params: {uid: uid}}">/peekuser/{{uid}}</router-link></td>
+          <td></td>
         </tr>
       </tbody>
     </table>
-    <div id="changeDisplayName" class="modal">
-      <div class="modal-background"></div>
-      <div class="modal-content">
-        <div class="notification">
-          <div class="field has-addons">
-            <div class="control has-icons-left has-icons-right is-expanded">
-              <input v-model="changeDN" class="input" type="email" placeholder="Display Name">
-              <span class="icon is-small is-left">
-                <i class="fas fa-signature"></i>
-              </span>
-            </div>
-            <div class="control">
-              <a class="button is-warning" @click="changeDisplayName">Change <i class="fas fa-exchange-alt"></i></a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <button class="modal-close is-large" aria-label="close" @click="untoggle('changeDisplayName')"></button>
-    </div>
     <div id="uploadPhoto" class="modal">
-      <div class="modal-background"></div>
+      <div class="modal-background" @click="untoggle('uploadPhoto')"></div>
       <div class="modal-content">
         <div class="notification">
           <div class="file has-name is-right is-fullwidth">
@@ -112,6 +112,7 @@ export default {
       uid: '',
       displayName: '',
       changeDN: '',
+      showChange: false,
       email: '',
       verified: 'Not Verified',
       created: 0,
@@ -122,6 +123,7 @@ export default {
   },
   created () {
     if(firebase.auth().currentUser) {
+      document.title = 'User | Azwraith.me'
       let c = firebase.auth().currentUser
       this.uid = c.uid
       this.displayName = c.displayName
@@ -145,7 +147,8 @@ export default {
     toggle (id) {
       document.querySelector('#' + id).classList.add('is-active')
       document.querySelector('html').classList.add('is-clipped')
-    },untoggle (id) {
+    },
+    untoggle (id) {
       document.querySelector('#' + id).classList.remove('is-active')
       document.querySelector('html').classList.remove('is-clipped')
     },
@@ -163,8 +166,7 @@ export default {
           firebase.firestore().collection("users").doc(this.uid).update({
             displayName: this.displayName
           }).then(() => {
-            alert('Changed Display Name')
-            this.untoggle('changeDisplayName')
+            this.showChange = !this.showChange
           }).catch(err => {
             alert('Error happened: ' + err)
           })
@@ -208,7 +210,7 @@ export default {
       }
       else {
         document.querySelector('#uploadButton').classList.add('is-loading')
-        let uploadTask = firebase.storage().ref('images/photo_of_' + this.email).put(this.photoFile)
+        let uploadTask = firebase.storage().ref('images/photo_of_' + this.uid).put(this.photoFile)
         uploadTask.on('state_changed', snapshot => {
           let percentage = snapshot.bytesTransferred / snapshot.totalBytes * 100
           document.querySelector("#uploader").value = percentage
@@ -239,6 +241,28 @@ export default {
       firebase.auth().currentUser.getIdToken(true).then(() => {
         this.$router.go()
         return 0
+      })
+    },
+    showEmail () {
+      firebase.firestore().collection("users").doc(this.uid).get().then(doc => {
+        if (doc.exists) return doc.data().email
+      }).then(emailExist => {
+        if (emailExist === null || emailExist === undefined) {
+          firebase.firestore().collection("users").doc(this.uid).update({
+            email: this.email
+          }).catch(err => {
+            console.log("Error happened: " + err)
+          })
+        }
+        else {
+          firebase.firestore().collection("users").doc(this.uid).update({
+            email: null
+          }).catch(err => {
+            console.log("Error happened: " + err)
+          })
+        }
+      }).catch(err => {
+        console.log("Error happened: " + err)
       })
     }
   }
