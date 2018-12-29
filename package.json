@@ -9,6 +9,9 @@
   "dependencies": {
     "firebase": "^5.7.0",
     "firebase-admin": "^6.4.0",
+    "node-sass": "^4.11.0",
+    "nprogress": "^0.2.0",
+    "sass-loader": "^7.1.0",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1"
   },

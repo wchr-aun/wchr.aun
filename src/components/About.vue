@@ -1,9 +1,8 @@
 <template>
   <div class="container">
-    <div class="pageloader"><span class="title">Commenting...</span></div>
     <div class="subtitle is-5 has-text-left">
-       &emsp;&emsp;Well, hi, I am a currently a third year computer engineering student studying at <a href="http://www2.kmutt.ac.th/">KMUTT</a>, 
-       yes, the website sucks, who have nothing to do, so I created the website using 
+       &emsp;&emsp;Well, hi, I am a currently a third year computer engineering student studying at <a href="http://www2.kmutt.ac.th/">KMUTT</a> 
+      (the website sucks) who have nothing to do, so I created the website using 
       <a href="https://vuejs.org/">VueJS</a>, <a href="https://bulma.io/">BulmaCSS</a>, <a href="https://wikiki.github.io/">Bulma-Extension</a>, <a href="https://fontawesome.com/">FontAwesome</a>, and <a href="https://firebase.google.com/">Firebase</a>.
       This website is created to collect all of websites that're mine or my project group. My contact is down below at the footer of every page
       or, just in case:<br>
@@ -59,8 +58,15 @@
     </div>
     <div v-if="!isLoggedIn" class="box">— Please Login to Comment —</div>
     <div class="is-divider" data-content="COMMENTS"></div>
+    <div v-if="comments.length === 0">
+      <div class="button is-white is-small is-loading"></div><span class="is-centered">Loading...</span>
+    </div>
     <div v-for="comment in comments" v-bind:key="comment.id">
       <div class="box">
+        <div class="is-size-7 is-pulled-right" v-if="admin">
+          <a class="has-text-info" @click="pinComment(comment.id)"><small>PIN THIS COMMENT <i class="fas fa-thumbtack"></i></small></a> | 
+          <a class="has-text-danger" @click="deleteComment(comment.id)"><small>DELETE THIS COMMENT <i class="fas fa-trash-alt"></i></small></a>
+        </div>
         <div class="has-text-left">
           #{{comment.id}} | 
           <small>Posted by:
@@ -101,7 +107,8 @@ export default {
       post: '',
       comments: [],
       isLoggedIn: false,
-      verified: false
+      verified: false,
+      admin: false
     }
   },
   created () {
@@ -131,15 +138,25 @@ export default {
           alert('Error happened: ' + err)
         })
       })
+    }).then(() => {
+      if(this.isLoggedIn){
+        firebase.firestore().collection('users').doc(this.uid).get().then(doc => {
+          this.admin = doc.data().admin
+        }).catch(err => {
+          alert('Error happened: ' + err)
+        })
+      }
+    }).catch(err => {
+      alert('Error happened: ' + err)
     })
   },
   methods: {
     postComment () {
       if(this.post === '' || this.post.length < 3){
-        alert('Comments must not be emptied and more than 3 characters.')
+        alert('Comments must not be emptied and at least 3 characters.')
       }
       else{
-        document.querySelector('.pageloader').classList.add('is-active')
+        document.querySelector('#loading').classList.add('is-active')
         firebase.firestore().collection("comments").add({
           post: this.post,
           postedby: this.uid,
@@ -147,7 +164,7 @@ export default {
         }).then(() => {
           this.$router.go()
         }).catch(err => {
-          document.querySelector('.pageloader').classList.remove('is-active')
+          document.querySelector('#loading').classList.remove('is-active')
           alert('Error adding document: ' + err)
         })
       }
@@ -157,6 +174,19 @@ export default {
       let Day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat']
       let Month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
       return Day[timeStamp.getDay()] + ', ' + Month[timeStamp.getMonth()] + ' ' + timeStamp.getDate()  + ',' + timeStamp.getFullYear() + ' at ' + ('0' + timeStamp.getHours()).slice(-2) + ':' + ('0' + timeStamp.getMinutes()).slice(-2) + ':' + ('0' + timeStamp.getSeconds()).slice(-2)
+    },
+    deleteComment (id) {
+      if (this.admin){
+        if (confirm('Are you sure to delete #' + id + '')) {
+          firebase.firestore().collection('comments').doc(id).delete().then(() => {
+            this.$router.go()
+          })
+        }
+      }
+      else alert('You do not have this permission.')
+    },
+    pinComment (id) {
+
     }
   }
 }

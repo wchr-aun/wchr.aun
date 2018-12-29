@@ -45,7 +45,8 @@ export default {
       firebase.auth().createUserWithEmailAndPassword(this.email, this.password).then(user => {
         firebase.firestore().collection('users').doc(user.user.uid).set({
           displayName: 'undefined',
-          createdAt: user.user.metadata.a
+          createdAt: user.user.metadata.a,
+          admin: false
         }).then(() => {
           firebase.auth().currentUser.updateProfile({displayName: 'undefined'}).then(() => {
             alert('Success Creating the Account')

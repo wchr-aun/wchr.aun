@@ -12,7 +12,7 @@
         <tr>
           <td><i class="fas fa-signature"></i> Display Name</td>
           <td>
-            <span v-if="!showChange">{{displayName}}</span>
+            <span id="displayName" v-if="!showChange" class="is-tooltip-right" data-tooltip="Changed">{{displayName}}</span>
             <div v-if="showChange" class="field has-addons">
               <div class="control">
                 <div class="control has-icons-left">
@@ -23,7 +23,7 @@
                 </div>
               </div>
               <div class="control">
-                <a class="button is-primary is-outlined" @click="changeDisplayName">Change</a>
+                <a id="changebutton" class="button is-primary is-outlined" @click="changeDisplayName">Change</a>
               </div>
             </div>
           </td>
@@ -64,7 +64,9 @@
         </tr>
         <tr>
           <td><i class="fas fa-eye"></i> Peek Yourself</td>
-          <td><router-link v-bind:to="{name: 'peekuser', params: {uid: uid}}">/peekuser/{{uid}}</router-link></td>
+          <td>
+            <router-link v-bind:to="{name: 'peekuser', params: {uid: uid}}">/peekuser/{{uid}}</router-link>
+          </td>
           <td></td>
         </tr>
       </tbody>
@@ -159,6 +161,7 @@ export default {
         return false
       }
       else {
+        document.querySelector('#changebutton').classList.add('is-loading')
         this.displayName = this.changeDN
         return firebase.auth().currentUser.updateProfile({
           displayName: this.displayName
@@ -166,7 +169,13 @@ export default {
           firebase.firestore().collection("users").doc(this.uid).update({
             displayName: this.displayName
           }).then(() => {
-            this.showChange = !this.showChange
+            $.when(this.showChange = false).then(() => {
+              document.querySelector('#displayName').classList.add('tooltip')
+              document.querySelector('#displayName').classList.add('is-tooltip-active')
+              setTimeout(function(){
+                  document.querySelector('#displayName').classList.remove('is-tooltip-active')
+              }, 1000)
+            })
           }).catch(err => {
             alert('Error happened: ' + err)
           })

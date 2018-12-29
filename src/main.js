@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import firebase from './components/firebase'
+import 'nprogress/nprogress.css'
 
 Vue.config.productionTip = false
 
@@ -14,5 +15,3 @@ firebase.auth().onAuthStateChanged(user => {
     }).$mount('#app')
   }
 })
-
-

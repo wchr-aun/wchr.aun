@@ -1,6 +1,5 @@
 <template>
   <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
-  <div class="pageloader"><span class="title">Logging In...</span></div>
   <div class="navbar-brand">
     <router-link to="/" class="navbar-item"><h5 class="title is-5 has-text-white-ter">Azwraith.me</h5></router-link>
     <a id="burgerd" role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample" @click="dropdown">
@@ -23,7 +22,8 @@
     </div>
 
     <div class="navbar-end" @click="dropdown">
-      <router-link to="/user" v-if="isLoggedIn" class="navbar-item">{{currentUser.email}}</router-link>
+      <router-link to="/manage" v-if="admin" class="navbar-item">Manage User</router-link>
+      <router-link to="/user" v-if="isLoggedIn" class="navbar-item">{{email}}</router-link>
       <div class="navbar-item">
         <div class="buttons">
           <a v-if="!isLoggedIn" class="button is-light" @click="toggle">Login</a>
@@ -69,15 +69,25 @@ export default {
   data () {
     return {
       isLoggedIn: false,
-      currentUser: false,
+      uid: false,
       email: '',
-      password: ''
+      email: '',
+      password: '',
+      admin: false
     }
   },
   created () {
     if(firebase.auth().currentUser) {
-      this.currentUser = firebase.auth().currentUser
+      const c = firebase.auth().currentUser
+      this.uid = c.uid
+      this.email = c.email
       this.isLoggedIn = true
+      firebase.firestore().collection('users').doc(this.uid).get().then(doc => {
+        this.admin = doc.data().admin
+        document.querySelector('#loading').classList.remove('is-active')
+      }).catch(err => {
+        console.log('Error happened: ' + err)
+      })
     }
   },
   methods: {
@@ -90,13 +100,13 @@ export default {
         document.querySelector('html').classList.remove('is-clipped')
     },
     login () {
-      document.querySelector('.pageloader').classList.add('is-active')
+      document.querySelector('#loading').classList.add('is-active')
       firebase.auth().signInWithEmailAndPassword(this.email, this.password).then(user => {
         this.untoggle()
         this.$router.go()
       },
       err => {
-        document.querySelector('.pageloader').classList.remove('is-active')
+        document.querySelector('#loading').classList.remove('is-active')
         alert(err.message)
       })
     },

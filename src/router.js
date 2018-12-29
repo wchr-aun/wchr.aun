@@ -6,10 +6,11 @@ import firebase from './components/firebase.js'
 import User from './components/User.vue'
 import About from './components/About.vue'
 import PeekUser from './components/PeekUser.vue'
+import nprogress from 'nprogress'
 
 Vue.use(Router)
 
-let router =  new Router({
+const router =  new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -48,6 +49,7 @@ let router =  new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  nprogress.start()
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!firebase.auth().currentUser) {
       next({
@@ -71,6 +73,10 @@ router.beforeEach((to, from, next) => {
     else next()
   }
   else next()
+})
+
+router.afterEach(() => {
+  setTimeout(function () {nprogress.done()}, 300)
 })
 
 export default router
