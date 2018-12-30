@@ -39,12 +39,12 @@
         </tr>
         <tr>
           <td><i class="fas fa-plus-square"></i> Created At</td>
-          <td>{{timeStampToText(Number(created))}}</td>
+          <td>{{helper.timeStampToText(Number(created))}}</td>
           <td></td>
         </tr>
         <tr>
           <td><i class="fas fa-clock"></i> Last Login At</td>
-          <td>{{timeStampToText(Number(lastLogin))}}</td>
+          <td>{{helper.timeStampToText(Number(lastLogin))}}</td>
           <td></td>
         </tr>
         <tr>
@@ -107,6 +107,7 @@
 
 <script>
 import firebase from './firebase'
+import helper from './helper'
 export default {
   name: 'user',
   data () {
@@ -120,7 +121,8 @@ export default {
       created: 0,
       lastLogin: 0,
       photoFile: '',
-      photoURL: ''
+      photoURL: '',
+      helper: helper
     }
   },
   created () {
@@ -140,12 +142,6 @@ export default {
     }
   },
   methods: {
-    timeStampToText (time) {
-      let timeStamp = new Date(time)
-      let Day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat']
-      let Month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-      return Day[timeStamp.getDay()] + ', ' + Month[timeStamp.getMonth()] + ' ' + timeStamp.getDate()  + ', ' + timeStamp.getFullYear() + ' at ' + ('0' + timeStamp.getHours()).slice(-2) + ':' + ('0' + timeStamp.getMinutes()).slice(-2) + ':' + ('0' + timeStamp.getSeconds()).slice(-2)
-    },
     toggle (id) {
       document.querySelector('#' + id).classList.add('is-active')
       document.querySelector('html').classList.add('is-clipped')

@@ -3,6 +3,7 @@ service cloud.firestore {
     match /comments/{comment} {
       allow read;
       allow create: if request.auth.token.email_verified == true;
+      allow update: if isAdmin() && comment == "pinned"
       allow delete: if isAdmin()
     }
     match /users/{uid} {
