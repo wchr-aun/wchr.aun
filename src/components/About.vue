@@ -38,10 +38,6 @@ export default {
   name: 'about',
   components: {
     Comments
-  },
-  data () {
-    return {
-    }
   }
 }
 </script>

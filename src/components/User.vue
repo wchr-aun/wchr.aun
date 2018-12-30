@@ -3,7 +3,7 @@
     <table class="table is-fullwidth is-hoverable is-striped">
       <thead>
         <tr>
-          <th>Column <i class="fas fa-columns"></i></th>
+          <th width="20%">Column <i class="fas fa-columns"></i></th>
           <th>Detail <i class="fas fa-info-circle"></i></th>
           <th>More <i class="fas fa-chevron-circle-down"></i></th>
         </tr>

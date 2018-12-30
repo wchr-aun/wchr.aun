@@ -3,7 +3,7 @@
     <table class="table is-fullwidth is-hoverable is-striped">
       <thead>
         <tr>
-          <th>Column <i class="fas fa-columns"></i></th>
+          <th width="20%">Column <i class="fas fa-columns"></i></th>
           <th>Detail <i class="fas fa-info-circle"></i></th>
           <th></th>
         </tr>
@@ -32,6 +32,7 @@
         <tr>
           <td><i class="fas fa-plus-square"></i> Created At</td>
           <td>{{timeStampToText(Number(created))}}</td>
+          <td></td>
         </tr>
         <tr v-if="photoURL !== ''">
           <td><i class="fas fa-image"></i> Photo</td>
@@ -50,9 +51,10 @@
                     <div class="has-text-weight-semibold">#{{comment.id}}</div>
                     <div class="is-size-7">{{timeStampToText(comment.postedat)}}</div>
                   </div>
-                  <div class="column is-narrow"><div class="is-divider-vertical"></div></div>
                   <div class="column">
-                    <p class="is-centered notification">{{comment.post}}</p>
+                    <input type="checkbox" class="read-more-state" v-bind:id="'peek-'+comment.id" style="display: none">
+                    <p class="read-more-wrap" style="white-space: pre-line">{{comment.post.slice(0,149)}}<span class="read-more-target">{{comment.post.slice(149)}}</span></p>
+                    <label class="is-size-7 has-text-weight-bold has-text-grey read-more-trigger" v-if="comment.post.length > 150" v-bind:for="'peek-'+comment.id"></label>
                   </div>
                   <hr>
                 </div>

@@ -53,7 +53,14 @@
       </div><hr>
       <div class="columns">
         <div class="column is-1 has-text-right is-hidden-touch">Context:</div>
-        <div class="column is-10 has-text-left">{{pinned.post}}</div>
+        <div class="column is-10 has-text-left">
+          <input type="checkbox" class="read-more-state" v-bind:id="'pinned-'+pinned.id" style="display: none">
+          <p class="read-more-wrap" style="white-space: pre-line">
+            <span v-html="pinned.post.slice(0,299)"></span>
+            <span v-html="pinned.post.slice(299)" class="read-more-target"></span>
+          </p>
+          <label class="is-size-7 has-text-weight-bold has-text-grey read-more-trigger" v-if="pinned.post.length > 300" v-bind:for="'pinned-'+pinned.id"></label>
+        </div>
       </div>
     </div>
 
@@ -82,11 +89,18 @@
               </span>
             </router-link>
           </small>
-          <div v-if="pinned != null" class="is-size-7">Posted at: {{helper.timeStampToText(pinned.postedat.seconds*1000 + pinned.postedat.nanoseconds/1000000)}}</div>
+          <div v-if="pinned != null" class="is-size-7">Posted at: {{helper.timeStampToText(comment.postedat.seconds*1000 + comment.postedat.nanoseconds/1000000)}}</div>
         </div><hr>
         <div class="columns">
           <div class="column is-1 has-text-right is-hidden-touch">Context:</div>
-          <div class="column is-10 has-text-left">{{comment.post}}</div>
+          <div class="column is-10 has-text-left">
+            <input type="checkbox" class="read-more-state" v-bind:id="'comment-'+comment.id" style="display: none">
+            <p class="read-more-wrap" style="white-space: pre-line">
+              <span v-html="comment.post.slice(0,299)"></span>
+              <span v-html="comment.post.slice(299)" class="read-more-target"></span>
+            </p>
+            <label class="is-size-7 has-text-weight-bold has-text-grey read-more-trigger" v-if="comment.post.length > 300" v-bind:for="'comment-'+comment.id"></label>
+          </div>
         </div>
       </div><small></small>
     </div>
@@ -96,6 +110,7 @@
 <script>
 import firebase from "./firebase"
 import helper from "./helper"
+import '../css/additional.css'
 export default {
   data () {
     return {
@@ -123,20 +138,19 @@ export default {
     }
     firebase.firestore().collection("comments").orderBy("postedat", "desc").limit(5).get().then(querySnapshot => {
       querySnapshot.forEach(doc => {
-        if(doc.id != "pinned"){
+        if(doc.exists){
           let uid = doc.data().postedby
           let comment = {
             id: doc.id,
             uid: uid,
-            post: doc.data().post,
-            postedat: doc.data().postedat
+            post: doc.data().post.replace( /(https:\/\/[^\s]+)/gi , '<a href="$1">$1</a>' ),
+            postedat: doc.data().postedat,
+            postedby: ''
           }
-          firebase.firestore().collection("users").doc(uid).get().then(user => {
-            comment.postedby = user.data().displayName
-            return this.comments.push(comment)
-          }).catch(err => {
-            console.log("Error happened: " + err)
+          this.getDisplayName(uid).then(displayName => {
+            comment.postedby = displayName
           })
+          this.comments.push(comment)
         }
       })
     }).then(() => {
@@ -144,21 +158,22 @@ export default {
         if(doc.exists){
           const pinnedby = doc.data().pinnedby
           firebase.firestore().collection("comments").doc(doc.data().path).get().then(pinned => {
-            let puid = pinned.data().postedby
-            this.pinned = {
-              id: pinned.id,
-              uid: puid,
-              post: pinned.data().post,
-              postedat: pinned.data().postedat,
-              pinnedby: pinnedby,
-              postedby: null
+            if(pinned.exists){
+              let puid = pinned.data().postedby
+              this.pinned = {
+                id: pinned.id,
+                uid: puid,
+                post: pinned.data().post.replace( /(https:\/\/[^\s]+)/gi , '<a href="$1">$1</a>' ),
+                postedat: pinned.data().postedat,
+                pinnedby: pinnedby,
+                postedby: ''
+              }
+              this.getDisplayName(puid).then(displayName => {
+                this.pinned.postedby = displayName
+                this.allDone = true
+              })
             }
-            firebase.firestore().collection("users").doc(puid).get().then(user => {
-              this.pinned.postedby = user.data().displayName
-              this.allDone = true
-            }).catch(err => {
-              console.log("Error happened: " + err)
-            })
+            else this.allDone = true
           })
         }
         else this.allDone = true
@@ -167,17 +182,24 @@ export default {
           firebase.firestore().collection("users").doc(this.uid).get().then(doc => {
             this.admin = doc.data().admin
           }).catch(err => {
-            console.log("Error happened: " + err)
+            console.log("Error happened in 181: " + err)
           })
         }
       }).catch(err => {
-        console.log("Error happened: " + err)
+        console.log("Error happened in 185: " + err)
       })
     }).catch(err => {
-      console.log("Error happened: " + err)
+      console.log("Error happened in 188: " + err)
     })
   },
   methods: {
+    getDisplayName (id) {
+      return firebase.firestore().collection("users").doc(id).get().then(doc => {
+        if (doc.exists) return doc.data().displayName
+      }).catch(err => {
+        console.log("Error happened in getDisplayname: " + err)
+      })
+    },
     postComment () {
       if(this.post === "" || this.post.length < 3){
         alert("Comments must not be emptied and at least 3 characters.")
@@ -230,4 +252,3 @@ export default {
   }
 }
 </script>
-
