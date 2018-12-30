@@ -84,11 +84,11 @@ export default {
       this.isLoggedIn = true
       firebase.firestore().collection('users').doc(this.uid).get().then(doc => {
         this.admin = doc.data().admin
-        document.querySelector('#loading').classList.remove('is-active')
       }).catch(err => {
         console.log('Error happened: ' + err)
       })
     }
+    document.querySelector('#loading').classList.remove('is-active')
   },
   methods: {
     toggle () {

@@ -5,6 +5,7 @@
         <tr>
           <th>Column <i class="fas fa-columns"></i></th>
           <th>Detail <i class="fas fa-info-circle"></i></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -21,10 +22,12 @@
                 {{displayName}}
               </span>
           </td>
+          <td></td>
         </tr>
         <tr v-if="email !== ''">
           <td><i class="fas fa-envelope"></i> Email</td>
           <td>{{email}}</td>
+          <td></td>
         </tr>
         <tr>
           <td><i class="fas fa-plus-square"></i> Created At</td>
@@ -35,6 +38,28 @@
           <td>
             <img v-bind:src="photoURL" width="300">
           </td>
+          <td></td>
+        </tr>
+        <tr>
+          <td><i class="fas fa-comments"></i> Recent Comments</td>
+          <td>
+            <div v-for="comment in comments" v-bind:key="comment.id">
+              <div class="notification is-white">
+                <div class="columns is-multiline is-vertical-center">
+                  <div class="column is-3">
+                    <div class="has-text-weight-semibold">#{{comment.id}}</div>
+                    <div class="is-size-7">{{timeStampToText(comment.postedat)}}</div>
+                  </div>
+                  <div class="column is-narrow"><div class="is-divider-vertical"></div></div>
+                  <div class="column">
+                    <p class="is-centered notification">{{comment.post}}</p>
+                  </div>
+                  <hr>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td></td>
         </tr>
       </tbody>
     </table>
@@ -51,7 +76,8 @@ export default {
       displayName: '',
       photoURL: '',
       created: 0,
-      email: ''
+      email: '',
+      comments: []
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -64,6 +90,12 @@ export default {
           vm.created = doc.data().createdAt
           vm.email = doc.data().email || ''
           document.title = 'Peeking - ' + vm.displayName + ' | Azwraith.me'
+          firebase.firestore().collection("comments").where("postedby", "==", to.params.uid).orderBy("postedat", "desc").limit(3).get().then(query => {
+            query.forEach(doc => {
+              let comment = {id: doc.id, post: doc.data().post, postedat: doc.data().postedat.seconds * 1000 + doc.data().postedat.nanoseconds / 1000000}
+              vm.comments.push(comment)
+            })
+          })
         })
       }
     })
@@ -73,9 +105,16 @@ export default {
       let timeStamp = new Date(time)
       let Day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thr', 'Fri', 'Sat']
       let Month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-      return Day[timeStamp.getDay()] + ', ' + Month[timeStamp.getMonth()] + ' ' + timeStamp.getDate()  + ', ' + timeStamp.getFullYear() + ' at ' + ('0' + timeStamp.getHours()).slice(-2) + ':' + ('0' + timeStamp.getMinutes()).slice(-2) + ':' + ('0' + timeStamp.getSeconds()).slice(-2)
+      return Day[timeStamp.getDay()] + ', ' + Month[timeStamp.getMonth()] + ' ' + timeStamp.getDate()  + ',' + timeStamp.getFullYear() + ' at ' + ('0' + timeStamp.getHours()).slice(-2) + ':' + ('0' + timeStamp.getMinutes()).slice(-2) + ':' + ('0' + timeStamp.getSeconds()).slice(-2)
     },
   }
 }
 </script>
+
+<style>
+.is-vertical-center {
+  display: flex;
+  align-items: center;
+}
+</style>
 
