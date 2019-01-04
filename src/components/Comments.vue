@@ -127,7 +127,8 @@ export default {
       helper: helper
     }
   },
-  created () {
+  created (id) {
+    console.log(id)
     if(firebase.auth().currentUser) {
       let c = firebase.auth().currentUser
       this.uid = c.uid
@@ -163,7 +164,7 @@ export default {
               this.pinned = {
                 id: pinned.id,
                 uid: puid,
-                post: pinned.data().post.replace( /(https:\/\/[^\s]+)/gi , '<a href="$1">$1</a>' ),
+                post: pinned.data().post.replace( /(https:\/\/[^\s]+)/gi , '<a href="$1" target="_blank">$1</a>' ),
                 postedat: pinned.data().postedat,
                 pinnedby: pinnedby,
                 postedby: ''

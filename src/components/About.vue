@@ -38,6 +38,9 @@ export default {
   name: 'about',
   components: {
     Comments
+  },
+  created () {
+    Comments.created(50)
   }
 }
 </script>

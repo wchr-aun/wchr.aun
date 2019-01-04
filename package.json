@@ -7,18 +7,14 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "firebase": "^5.7.0",
-    "firebase-admin": "^6.4.0",
-    "node-sass": "^4.11.0",
+    "firebase": "^5.7.2",
     "nprogress": "^0.2.0",
-    "sass-loader": "^7.1.0",
-    "vue": "^2.5.17",
-    "vue-router": "^3.0.1",
-    "yarn": "^1.12.3"
+    "vue": "^2.5.21",
+    "vue-router": "^3.0.1"
   },
   "devDependencies": {
     "@vue/cli-service": "^3.2.0",
-    "vue-template-compiler": "^2.5.17"
+    "vue-template-compiler": "^2.5.21"
   },
   "postcss": {
     "plugins": {

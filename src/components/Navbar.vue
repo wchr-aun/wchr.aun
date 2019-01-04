@@ -14,8 +14,8 @@
       <div class="navbar-item has-dropdown is-hoverable">
         <a class="navbar-link">Projects</a>
         <div class="navbar-dropdown">
-          <a class="navbar-item" href="https://vcabb.azwraith.me">VC-ABB</a>
-          <a class="navbar-item" href="https://sgws.azwraith.me">SGWS</a>
+          <a class="navbar-item" href="https://vcabb.azwraith.me" target="_blank">VC-ABB</a>
+          <a class="navbar-item" href="https://sgws.azwraith.me" target="_blank">SGWS</a>
         </div>
       </div>
       <router-link to="/about" class="navbar-item" @click="dropdown">About Me</router-link>
