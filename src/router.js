@@ -7,6 +7,7 @@ import User from './components/User.vue'
 import About from './components/About.vue'
 import PeekUser from './components/PeekUser.vue'
 import nprogress from 'nprogress'
+import Resume from './components/Resume.vue'
 
 Vue.use(Router)
 
@@ -23,6 +24,11 @@ const router =  new Router({
       path: '/about',
       name: 'about',
       component: About
+    },
+    {
+      path: '/resume',
+      name: 'resume',
+      component: Resume
     },
     {
       path: '/register',
