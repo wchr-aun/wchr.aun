@@ -1,0 +1,14 @@
+.Site {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.Site-content {
+  padding-top: 3.25rem;
+  flex: 1;
+}
