@@ -2,16 +2,17 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { HomeComponent } from './home.component';
+import { WelcomeComponent } from './welcome/welcome.component';
+import { TimelineComponent } from './timeline/timeline.component'
 
 @NgModule({
   declarations: [
-    HomeComponent
+    HomeComponent,
+    WelcomeComponent,
+    TimelineComponent
   ],
   imports: [
     BrowserModule
-  ],
-  exports: [
-    HomeComponent
   ],
   providers: [],
   bootstrap: [HomeComponent]
