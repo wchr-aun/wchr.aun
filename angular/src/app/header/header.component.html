@@ -1,6 +1,10 @@
-<nav class="navbar is-dark is-fixed-top" [ngClass]="{visible: shownPath !== 'default'}" role="navigation" aria-label="main navigation" (scroll)="onWindowScroll()">
+<nav 
+  class="navbar is-dark is-fixed-top" 
+  [ngClass]="{visible: shownPath !== 'default', notVisible: shownPath === 'default'}" 
+  (scroll)="onWindowScroll()"
+  >
   <div class="navbar-brand">
-    <a class="navbar-item" routerLink="/" (click)="onActivate()">
+    <a class="navbar-item" routerLink="/" (click)="scrollTo('top')">
       <b>Azwraith.me</b>
     </a>
     
@@ -14,13 +18,24 @@
   <div class="navbar-menu">
     <div class="navbar-start">
       <ng-container *ngFor="let element of path[shownPath]">
-        <a class="navbar-item" [href]="element.id">{{ element.name }}</a>
+        <a 
+          class="navbar-item" 
+          (click)="scrollTo(element.id)" 
+          *ngIf="shownPath !== 'default' else default;" 
+          [ngClass]="{fadein: shownPath !== 'default'}"
+          >
+          {{ element.name }}
+        </a>
+        <ng-template #default>
+          <a 
+            class="navbar-item" 
+            [routerLink]="element.path" 
+            [ngClass]="{fadein: shownPath === 'default'}"
+            >
+            {{ element.name }}
+          </a>
+        </ng-template>
       </ng-container>
-      <!-- <a class="navbar-item" routerLink="/">Home</a>
-      <a class="navbar-item" href="#aboutme">About me</a>
-      <a class="navbar-item" href="#timeline">Timeline</a>
-      <a class="navbar-item" href="#accomplishments">Accomplishments</a>
-      <a class="navbar-item" href="#contact">Contact</a> -->
     </div>
   </div>
 </nav>

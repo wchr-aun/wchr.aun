@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -8,4 +8,9 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'azwraith';
   backgroundImage: string = "assets/images/bg.jpg"
+  @ViewChild('timeline') element: ElementRef;
+
+  onRouterOutletActivate(event: any) {
+    console.log(event)
+  }
 }
