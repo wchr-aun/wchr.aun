@@ -1,8 +1,8 @@
-<div class="Site">
+<div class="Site" [ngStyle]="{background: 'url(' + backgroundImage + ')'}">
   <div class="Site-content">
     <app-warning></app-warning>
     <app-header></app-header>
-    <div class="container">
+    <div class="container is-fluid">
       <br>
       <router-outlet></router-outlet>
       <br>

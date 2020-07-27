@@ -1,6 +1,6 @@
-<nav class="navbar is-dark is-fixed-top" role="navigation" aria-label="main navigation">
+<nav class="navbar is-dark is-fixed-top" [ngClass]="{visible: shownPath !== 'default'}" role="navigation" aria-label="main navigation" (scroll)="onWindowScroll()">
   <div class="navbar-brand">
-    <a class="navbar-item">
+    <a class="navbar-item" routerLink="/" (click)="onActivate()">
       <b>Azwraith.me</b>
     </a>
     
@@ -13,8 +13,14 @@
 
   <div class="navbar-menu">
     <div class="navbar-start">
-      <a class="navbar-item" routerLink="/">Home</a>
-      <a class="navbar-item" routerLink="/aboutme">About Me</a>
+      <ng-container *ngFor="let element of path[shownPath]">
+        <a class="navbar-item" [href]="element.id">{{ element.name }}</a>
+      </ng-container>
+      <!-- <a class="navbar-item" routerLink="/">Home</a>
+      <a class="navbar-item" href="#aboutme">About me</a>
+      <a class="navbar-item" href="#timeline">Timeline</a>
+      <a class="navbar-item" href="#accomplishments">Accomplishments</a>
+      <a class="navbar-item" href="#contact">Contact</a> -->
     </div>
   </div>
 </nav>

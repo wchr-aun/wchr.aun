@@ -15,7 +15,7 @@ export class TimelineComponent implements OnInit {
       {month: 'July', text: 'Attended at King Mongkut’s University of Technology Thonburi in Computer Engineering'}
     ],
     2017: [{month: 'November', text: 'Second runner up in Thailand Open Hackathon 2017'}],
-    2018: [{month: 'June-July', text: 'Part-time as a PHP developer at Extosoft Co.Ltd.'}],
+    2018: [{month: 'June-July', text: 'Part-time as a PHP developer at Extosoft Co. Ltd.'}],
     2019: [{month: 'June-August', text: 'Interned as a research assistant at Nanyang Technological University, Singapore'}],
     2020: [
       {month: 'February', text: 'Received supporting fund in the semi final round of NSC2020'},

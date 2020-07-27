@@ -7,4 +7,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'azwraith';
+  backgroundImage: string = "assets/images/bg.jpg"
 }
