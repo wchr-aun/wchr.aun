@@ -1,34 +1,38 @@
-import { Component, HostListener } from '@angular/core';
-import { Router, NavigationEnd, NavigationStart } from '@angular/router';
+import { Component, HostListener, OnDestroy } from '@angular/core';
+import { Router, NavigationStart } from '@angular/router';
+import * as CONSTANT from '../constant'
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnDestroy {
   @HostListener('window:scroll', ['$event'])
   onWindowScroll() {
-    if (window.pageYOffset == 0) this.shownPath = 'default'
-    else this.shownPath = this.currentPath
+    if (window.pageYOffset == 0) {
+      this.path = []
+      for (let i in CONSTANT.PATHS)
+        this.path.push(CONSTANT.PATHS[i])
+      this.isSubpath = false
+    }
+    else {
+      this.path = CONSTANT.SUB_PATHS[this.currentPath]
+      this.isSubpath = true
+    }
   }
 
-  path: {} = {
-    '/': [
-      {name: 'Welcome', id: 'welcome'}, 
-      {name: 'About me', id: 'aboutme'}, 
-      {name: 'Timeline', id: 'timeline'}, 
-      {name: 'Accomplishments', id: 'accomplishments'}, 
-      {name: 'Contact', id: 'contact'}],
-    'default': [{name: 'Home', path: '/'}]
-  };
+  path: any[] = [];
   currentPath: string;
-  shownPath: string = 'default';
+  isSubpath: boolean = false;
+  subscription: any[] = [];
 
   constructor(private router: Router) {
-    router.events.subscribe(event => {
+    this.subscription.push(router.events.subscribe(event => {
       if (event instanceof NavigationStart) this.currentPath = event.url;
-    })
+    }))
+    for (let i in CONSTANT.PATHS)
+      this.path.push(CONSTANT.PATHS[i])
   }
 
   scrollTo(elementId: string) {
@@ -41,5 +45,10 @@ export class HeaderComponent {
       target = element ? element.getBoundingClientRect().top - 50 : 0;
     }
     window.scrollTo(0, position + target);
+  }
+
+  ngOnDestroy() {
+    for (let i in this.subscription)
+      this.subscription[i].unsubscribe()
   }
 }

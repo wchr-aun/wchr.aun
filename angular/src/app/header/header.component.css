@@ -22,3 +22,10 @@
 @keyframes fadeOutHeader{
   from{opacity:1} to{opacity:0.90}
 }
+
+.sticky-bottom {
+  position: fixed;
+  bottom: 3%;
+  right: 1%;
+  z-index: 1000;
+}
