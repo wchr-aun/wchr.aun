@@ -1,6 +1,6 @@
 .visible {
   animation:fadeOutHeader ease 1s;
-  opacity: 0.90;
+  opacity: 0.85;
 }
 
 .notVisible {
@@ -16,11 +16,11 @@
 }
 
 @keyframes fadeInHeader{
-  from{opacity:0.90} to{opacity:1}
+  from{opacity:0.85} to{opacity:1}
 }
 
 @keyframes fadeOutHeader{
-  from{opacity:1} to{opacity:0.90}
+  from{opacity:1} to{opacity:0.85}
 }
 
 .sticky-bottom {

@@ -30,6 +30,7 @@ export class HeaderComponent implements OnDestroy {
   constructor(private router: Router) {
     this.subscription.push(router.events.subscribe(event => {
       if (event instanceof NavigationStart) this.currentPath = event.url;
+      this.scrollTo('top');
     }))
     for (let i in CONSTANT.PATHS)
       this.path.push(CONSTANT.PATHS[i])
@@ -42,7 +43,7 @@ export class HeaderComponent implements OnDestroy {
     if (elementId === 'top') target = -position;
     else {
       element = document.getElementById(elementId);
-      target = element ? element.getBoundingClientRect().top - 50 : 0;
+      target = element ? element.getBoundingClientRect().top - 60 : 0;
     }
     window.scrollTo(0, position + target);
   }

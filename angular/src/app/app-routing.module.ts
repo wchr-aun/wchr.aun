@@ -8,7 +8,8 @@ import * as CONSTANT from './constant'
 const routes: Routes = [
   { path: CONSTANT.PATHS.home.url, component: HomeComponent },
   { path: CONSTANT.PATHS.projects.url, component: ProjectsComponent },
-  { path: CONSTANT.PATHS.rants.url, component: RantsComponent }
+  { path: CONSTANT.PATHS.rants.url, component: RantsComponent },
+  { path: '**', component: HomeComponent }
 ];
 
 @NgModule({

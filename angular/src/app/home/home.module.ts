@@ -2,23 +2,23 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { HomeComponent } from './home.component';
-import { WelcomeComponent } from './welcome/welcome.component';
 import { TimelineComponent } from './timeline/timeline.component';
-import { AccomplishmentsComponent } from './accomplishments/accomplishments.component';
-import { ContactComponent } from './contact/contact.component'
+import { ArticleComponent } from './article/article.component'
+import { HomeFacade } from './home.facade'
+import { StoreModule } from '@ngrx/store';
+import { featureKey, reducer } from './store/reducers'
 
 @NgModule({
   declarations: [
     HomeComponent,
-    WelcomeComponent,
     TimelineComponent,
-    AccomplishmentsComponent,
-    ContactComponent
+    ArticleComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    StoreModule.forFeature(featureKey, reducer)
   ],
-  providers: [],
+  providers: [HomeFacade],
   bootstrap: [HomeComponent]
 })
 export class HomeModule { }
