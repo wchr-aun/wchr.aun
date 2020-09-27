@@ -44,5 +44,6 @@
   class="fas fa-chevron-circle-up is-size-3 sticky-bottom" 
   style="cursor: pointer" 
   (click)="scrollTo('top')" 
+  [ngClass]="{fadein: isSubpath}"
   *ngIf="isSubpath"
 ></i>

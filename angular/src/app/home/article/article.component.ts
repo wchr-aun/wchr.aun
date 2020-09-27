@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import * as marked from 'marked'
 
 @Component({
   selector: 'app-article',
@@ -8,10 +9,13 @@ import { Component, OnInit, Input } from '@angular/core';
 export class ArticleComponent implements OnInit {
   @Input() title: string;
   @Input() details: string;
+  @Input() fullscreen: boolean = false;
+  messageShown: string;
 
   constructor() { }
 
   ngOnInit(): void {
+    this.messageShown = marked(this.details.split('\\n').join('\n'));
   }
 
 }

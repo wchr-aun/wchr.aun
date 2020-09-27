@@ -1,6 +1,6 @@
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { Router, NavigationStart } from '@angular/router';
-import * as CONSTANT from '../constant'
+import * as CONSTANT from '../../assets/constant'
 
 @Component({
   selector: 'app-header',

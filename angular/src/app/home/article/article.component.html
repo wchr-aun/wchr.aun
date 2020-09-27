@@ -1,9 +1,8 @@
-<article class="message">
+<article class="message" [ngClass]="{'fullscreen': fullscreen}">
   <div class="message-body">
     <h1 class="title is-1">{{title}}</h1>
     <div class="is-divider"></div>
-    <div class="subtitle is-5 has-text-right">
-      {{details}}
+    <div class="subtitle is-4 has-text-right" [innerHTML]="messageShown" style="white-space: pre-line;">
     </div>
   </div>
 </article>
