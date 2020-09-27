@@ -1,0 +1,14 @@
+.Site {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.Site-content {
+  padding-top: 3.25rem;
+  flex: 1;
+}
+
+.spacing {
+  padding-top: 2.5vh;
+}

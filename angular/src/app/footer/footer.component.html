@@ -1,0 +1,15 @@
+<footer class="footer">
+  <div class="content has-text-centered">
+    <p>
+      |
+      <ng-container *ngFor="let path of paths">
+        <a [routerLink]="path.url">{{ path.name }}</a> |
+      </ng-container>
+    </p>
+    <p class="is-size-7">
+      <strong>Azwraith.me</strong> by <a href="https://github.com/wchr-aun">wchr-aun</a> | 
+      <a href="https://github.com/wchr-aun/azwraith"><i class="fas fa-code"></i> Source code</a> | 
+      Last updated: July 2020
+    </p>
+  </div>
+</footer>
