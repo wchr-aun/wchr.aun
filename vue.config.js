@@ -1,3 +1,3 @@
 module.exports = {
-  transpileDependencies: ["vue-meta"],
+	transpileDependencies: ['vue-meta']
 };

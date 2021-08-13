@@ -1,0 +1,43 @@
+<template>
+	<div class="relative h-32 bg-gray-700 text-gray-200 flex items-center justify-center">
+		<div
+			class="uppercase text-4xl font-bold select-none underline cursor-pointer"
+			@click="clickDomain"
+		>
+			wchr.aun
+		</div>
+		<div class="absolute right-2 top-2 text-xs" v-if="loggedIn">Logged in as: {{ user }}</div>
+	</div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+	data() {
+		return { domainClicks: 0 };
+	},
+	computed: {
+		loggedIn() {
+			return this.store.state.loggedIn;
+		},
+		user() {
+			return this.store.state.user;
+		}
+	},
+	methods: {
+		clickDomain() {
+			this.domainClicks++;
+			if (this.$router.currentRoute.value.path === '/login') {
+				this.$router.push('/');
+				return;
+			}
+			if (this.domainClicks > 3) {
+				this.domainClicks = 0;
+				this.$router.push('/login');
+				return;
+			}
+		}
+	}
+});
+</script>
