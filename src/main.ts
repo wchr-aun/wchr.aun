@@ -1,12 +1,31 @@
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { createApp } from "vue";
+import { createRouter, createWebHistory } from "vue-router";
+import { createMetaManager } from "vue-meta";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { fas } from "@fortawesome/free-solid-svg-icons";
+import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import App from "./App.vue";
+import Home from "./views/Home.vue";
+import "./index.css";
 
-import { AppModule } from './app/app.module';
-import { environment } from './environments/environment';
+library.add(fas, faGithub, faLinkedin);
 
-if (environment.production) {
-  enableProdMode();
-}
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [{ path: "/", component: Home }],
+  scrollBehavior(to) {
+    if (to.hash) {
+      return { el: to.hash };
+    }
+  },
+});
 
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.error(err));
+const app = createApp(App);
+
+app.use(router);
+app.use(createMetaManager());
+app.component("font-awesome-icon", FontAwesomeIcon);
+
+await router.isReady();
+app.mount("#app");
