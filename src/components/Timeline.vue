@@ -72,15 +72,6 @@
 </template>
 
 <script lang="ts">
-interface TimelineList {
-  position: "left" | "right";
-  title: string;
-  message: string;
-  icon: string;
-  hint?: string;
-  more?: string;
-}
-
 export default {
   name: "Timeline",
   props: ["list"],

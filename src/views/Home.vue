@@ -42,11 +42,12 @@
 
 <script lang="ts">
 import { useMeta } from "vue-meta";
-import Timeline from "../components/Timeline.vue";
-import AboutMe from "../components/AboutMe.vue";
-import ContactMe from "../components/ContactMe.vue";
+import { defineComponent } from "vue";
+import Timeline from "@/components/Timeline.vue";
+import AboutMe from "@/components/AboutMe.vue";
+import ContactMe from "@/components/ContactMe.vue";
 
-export default {
+export default defineComponent({
   setup() {
     useMeta({
       title: "Home",
@@ -121,5 +122,5 @@ export default {
       ],
     };
   },
-};
+});
 </script>

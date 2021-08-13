@@ -6,8 +6,9 @@
         <a
           class="underline text-gray-400 font-bold"
           href="mailto:wchr.aun@gmail.com"
-          >wchr.aun@gmail.com</a
         >
+          wchr.aun@gmail.com
+        </a>
       </p>
       <p>
         <font-awesome-icon class="mr-2" :icon="['fab', 'github']" /> GitHub:
