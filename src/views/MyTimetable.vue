@@ -2,7 +2,7 @@
 	<div class="text-right">
 		<a :href="timetableUrl">Go To Full Page</a>
 	</div>
-	<iframe :src="timetableUrl" style="height: 70vh" width="100%" frameborder="0"></iframe>
+	<iframe :src="timetableUrl" style="height: 85vh" width="100%" frameborder="0"></iframe>
 </template>
 
 <script lang="ts">
