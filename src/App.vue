@@ -37,7 +37,7 @@ export default defineComponent({
 	},
 	data() {
 		return {
-			SITE_NAME: 'wchr.aun'
+			SITE_NAME: 'wchr-aun'
 		};
 	}
 });

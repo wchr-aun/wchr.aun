@@ -1,13 +1,31 @@
 <template>
-	<div class="text-right">
-		<a :href="timetableUrl">Go To Full Page</a>
+	<div v-if="authenticated">
+		<transition appear name="fade">
+			<div>
+				<div class="text-right">
+					<a :href="timetableUrl">Go To Full Page</a>
+				</div>
+				<iframe :src="timetableUrl" style="height: 85vh" width="100%" frameborder="0"></iframe>
+			</div>
+		</transition>
 	</div>
-	<iframe :src="timetableUrl" style="height: 85vh" width="100%" frameborder="0"></iframe>
+	<template v-else>
+		<div class="text-center">Authenticating...</div>
+	</template>
 </template>
 
 <script lang="ts">
+import router from '@/router';
 import { defineComponent } from 'vue';
 export default defineComponent({
+	beforeUpdate() {
+		if (!this.store.state.loggedIn) router.push('/');
+	},
+	computed: {
+		authenticated() {
+			return this.store.state.user === 'anaunz@gmail.com';
+		}
+	},
 	data() {
 		return {
 			timetableUrl:
@@ -16,3 +34,13 @@ export default defineComponent({
 	}
 });
 </script>
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+	transition: opacity 0.8s;
+}
+.fade-enter-from, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+	opacity: 0;
+}
+</style>
