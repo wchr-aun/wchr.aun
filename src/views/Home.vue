@@ -1,16 +1,22 @@
 <template>
 	<p class="text-2xl text-center font-bold pb-8">- Work In Progress -</p>
-	<div class="pb-8" id="aboutme">
-		<AboutMe />
-	</div>
+	<transition appear name="fade">
+		<div class="pb-8" id="aboutme">
+			<AboutMe />
+		</div>
+	</transition>
 	<hr class="p-4" />
-	<div class="pb-8" id="contact">
-		<ContactMe />
-	</div>
+	<transition appear name="fade">
+		<div class="pb-8" id="contact">
+			<ContactMe />
+		</div>
+	</transition>
 	<hr class="p-4" />
-	<div id="timeline">
-		<Timeline :list="timeline" />
-	</div>
+	<transition appear name="fade">
+		<div id="timeline">
+			<Timeline :list="timeline" />
+		</div>
+	</transition>
 </template>
 
 <script lang="ts">
@@ -97,3 +103,14 @@ export default defineComponent({
 	}
 });
 </script>
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+	transition: opacity 1s;
+}
+.fade-enter-from,
+.fade-leave-to {
+	opacity: 0;
+}
+</style>

@@ -2,12 +2,16 @@ import { reactive, readonly } from 'vue';
 
 const state = reactive({
 	loggedIn: false,
-	user: ''
+	user: '',
+	role: ''
 });
 
 const methods = {
 	login: () => (state.loggedIn = true),
-	logout: () => (state.loggedIn = false),
+	logout: () => {
+		state.loggedIn = false;
+		state.user = '';
+	},
 	setUser: (user: string) => (state.user = user)
 };
 
