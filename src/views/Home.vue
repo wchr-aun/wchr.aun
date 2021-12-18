@@ -14,7 +14,7 @@
 	<hr class="p-4" />
 	<transition appear name="fade">
 		<div id="timeline">
-			<Timeline :list="timeline" />
+			<Timeline :list="timeline" :totalGrid="totalGrid" />
 		</div>
 	</transition>
 </template>
@@ -36,6 +36,7 @@ export default defineComponent({
 	components: { Timeline, AboutMe, ContactMe },
 	data() {
 		return {
+			totalGrid: 4,
 			timeline: [
 				{
 					position: 'left',
@@ -43,14 +44,64 @@ export default defineComponent({
 					message:
 						'Being the first rank at the admission entrance in BE Computer Engineering, KMUTT.',
 					hint: 'Aug 2016',
-					icon: 'university'
+					icon: 'university',
+					grid: 0
 				},
 				{
 					position: 'right',
-					title: 'Graduated from KMUTT',
-					message: 'Graduated with a second-class honour (GPAX 3.51/4.00).',
+					title: 'Second Runner-Up, Thailand Open Hackathon 2017',
+					message:
+						'Solving big data problems in a limited time frame for the qualifying round. And analysing all given data and predicting the possible ways to improve the system for the final round.',
+					hint: 'Jan 2018',
+					icon: 'award',
+					grid: 4,
+					condense: true
+				},
+				{
+					position: 'left',
+					title: 'Worked at Extosoft',
+					message: 'Worked at Extosoft as a part-time PHP developer',
+					hint: 'Jun 2018 - Jul 2018',
+					icon: 'briefcase',
+					grid: 4,
+					condense: true
+				},
+				{
+					position: 'left',
+					title: 'Internship at NTU',
+					message: 'Internship at Nanyang Technological University as a Research Assistant',
+					hint: 'Jun 2019 - Jul 2019',
+					icon: 'briefcase',
+					grid: 4,
+					condense: true
+				},
+				{
+					position: 'right',
+					title: 'Semifinalist, National Software Contest 2020',
+					message:
+						"Building a marketplace application for trading recyclable wastes without needing the knowledge to use functions for checking waste types through a phone's camera. (Senior project related)",
+					hint: 'Feb 2020',
+					icon: 'award',
+					grid: 4,
+					condense: true
+				},
+				{
+					position: 'right',
+					title: 'Second Runner-Up, Best Senior Projects 2019',
+					message:
+						"Building a marketplace application for trading recyclable wastes without needing the knowledge to use functions for checking waste types through a phone's camera.",
 					hint: 'Jun 2020',
-					icon: 'graduation-cap'
+					icon: 'award',
+					grid: 4
+				},
+				{
+					position: 'left',
+					title: 'Graduated from KMUTT',
+					message:
+						'Graduated with a second-class honour (GPAX 3.51/4.00).\nBeing among the top 15 students in the class during graduation.',
+					hint: 'Jun 2020',
+					icon: 'graduation-cap',
+					grid: 0
 				},
 				{
 					position: 'left',
@@ -58,23 +109,37 @@ export default defineComponent({
 					message:
 						'Started working at KBTG as a software engineer. Specifically worked on the frontend side of the project.',
 					hint: 'Jul 2020',
-					icon: 'briefcase'
+					icon: 'briefcase',
+					grid: 1
 				},
 				{
-					position: 'left',
+					position: 'right',
 					title: 'Published a paper',
 					message:
 						'Published a conference paper called "The Relations Between Implementation Date of Policies and The Spreading of COVID-19"',
 					more: 'https://ieeexplore.ieee.org/abstract/document/9245459/',
 					hint: 'Jul 2020',
-					icon: 'folder-open'
+					icon: 'book',
+					grid: 0
 				},
 				{
 					position: 'right',
+					title: "Rank eighth, Thailand's Top Coder Competition #Javascript",
+					message:
+						'Solving 4 problems related to computational thinking, algorithms, and data structure. Being 1 in 11 people who got all the questions correct. The final ranking was ordered by how well the code was written.',
+					more: 'https://jstopcoder.getlinks.com/',
+					hint: 'Dec 2020',
+					icon: 'award',
+					grid: 4,
+					condense: true
+				},
+				{
+					position: 'left',
 					title: 'Left KBTG',
 					message: 'Left KBTG',
 					hint: 'Dec 2020',
-					icon: 'sign-out-alt'
+					icon: 'sign-out-alt',
+					grid: 0
 				},
 				{
 					position: 'left',
@@ -82,21 +147,34 @@ export default defineComponent({
 					message:
 						'Started working at Accenture Thailand as an application development analyst. Specifically worked on the frontend side of the project.',
 					hint: 'Jan 2021',
-					icon: 'briefcase'
-				},
-				{
-					position: 'right',
-					title: 'Left Accenture',
-					message: 'Left Accenture Thailand',
-					hint: 'Jul 2021',
-					icon: 'sign-out-alt'
+					icon: 'briefcase',
+					grid: 1
 				},
 				{
 					position: 'left',
-					title: 'Studying at UoE',
-					message: 'Studied MSc Computer Science at University of Edinburgh',
+					title: 'Left Accenture',
+					message: 'Left Accenture Thailand',
+					hint: 'Jul 2021',
+					icon: 'sign-out-alt',
+					grid: 4,
+					condense: true
+				},
+				{
+					position: 'left',
+					title: 'Studying at the UoE',
+					message: 'Studied MSc Computer Science at the University of Edinburgh',
 					hint: 'Sep 2021',
-					icon: 'university'
+					icon: 'university',
+					grid: 1
+				},
+				{
+					position: 'left',
+					title: 'To be graduate from the UoE',
+					message: 'To be graduate from the University of Edinburgh',
+					hint: 'Sep 2022',
+					icon: 'graduation-cap',
+					grid: 4,
+					condense: true
 				}
 			]
 		};

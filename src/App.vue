@@ -4,12 +4,14 @@
 			content ? `${content} - ${SITE_NAME}` : SITE_NAME
 		}}</template>
 	</metainfo>
-	<div class="flex flex-col min-h-screen">
-		<Header />
-		<div class="flex-grow p-2 md:p-8 bg-gray-800 text-gray-200">
-			<router-view />
+	<div class="bg-svg">
+		<div class="flex flex-col min-h-screen">
+			<Header />
+			<div class="flex-grow p-2 md:p-8 text-gray-200">
+				<router-view />
+			</div>
+			<Footer />
 		</div>
-		<Footer />
 	</div>
 </template>
 
@@ -47,5 +49,8 @@ export default defineComponent({
 @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 body {
 	font-family: 'Montserrat', sans-serif !important;
+}
+.bg-svg {
+	background-image: url('./assets/bg.svg');
 }
 </style>
