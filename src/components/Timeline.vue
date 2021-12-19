@@ -153,11 +153,9 @@ export default defineComponent({
 .slide-fade-enter-active {
 	transition: all 0.8s ease-out;
 }
-
 .slide-fade-leave-active {
 	transition: all 0.5s cubic-bezier(1, 1, 1, 1);
 }
-
 .slide-fade-enter-from,
 .slide-fade-leave-to {
 	transform: translateY(-80px);

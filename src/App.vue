@@ -14,6 +14,29 @@
 			</div>
 			<Footer />
 		</div>
+		<transition name="arrow-slide-fade">
+			<div
+				@click="goToTop()"
+				v-if="hideNavbar"
+				class="
+					w-10
+					h-10
+					rounded-full
+					fixed
+					bg-gray-500
+					bottom-6
+					right-8
+					flex
+					items-center
+					justify-center
+					cursor-pointer
+					shadow-xl
+					text-xl text-gray-200
+				"
+			>
+				<font-awesome-icon class="-mt-0.5" icon="angle-up" />
+			</div>
+		</transition>
 	</div>
 </template>
 
@@ -50,12 +73,15 @@ export default defineComponent({
 		};
 	},
 	methods: {
-		dynamicNavbar(event: Event) {
+		dynamicNavbar(event: Event): void {
 			if (window.scrollY > 50) {
 				this.hideNavbar = true;
 			} else {
 				this.hideNavbar = false;
 			}
+		},
+		goToTop(): void {
+			window.scrollTo({ top: 0, behavior: 'smooth' });
 		}
 	}
 });
@@ -69,5 +95,17 @@ body {
 .bg-svg {
 	background-image: url('./assets/bg.svg');
 	background-attachment: fixed;
+}
+
+.arrow-slide-fade-enter-active {
+	transition: all 0.5s ease-out;
+}
+.arrow-slide-fade-leave-active {
+	transition: all 0.2s cubic-bezier(1, 1, 1, 1);
+}
+.arrow-slide-fade-enter-from,
+.arrow-slide-fade-leave-to {
+	transform: translateY(-20px);
+	opacity: 0;
 }
 </style>
