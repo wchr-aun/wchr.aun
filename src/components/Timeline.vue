@@ -70,7 +70,7 @@
 								v-bind:class="{
 									'cursor-pointer': item.parent && !item.end && extend.get(item.cover)
 								}"
-								@click="toggle(item.cover)"
+								@click="item.parent && !item.end && extend.get(item.cover) && toggle(item.cover)"
 							>
 								<span class="mx-auto font-semibold text-lg text-gray-800">
 									<font-awesome-icon
