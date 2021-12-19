@@ -52,5 +52,6 @@ body {
 }
 .bg-svg {
 	background-image: url('./assets/bg.svg');
+	background-attachment: fixed;
 }
 </style>
