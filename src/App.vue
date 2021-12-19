@@ -6,8 +6,10 @@
 	</metainfo>
 	<div class="bg-svg">
 		<div class="flex flex-col min-h-screen">
-			<Header />
-			<div class="flex-grow p-2 md:p-8 text-gray-200">
+			<div class="w-full fixed transition-all top-0" v-bind:class="{ '-top-32': hideNavbar }">
+				<Header />
+			</div>
+			<div class="flex-grow p-2 md:p-8 text-gray-200 mt-32">
 				<router-view />
 			</div>
 			<Footer />
@@ -36,11 +38,25 @@ export default defineComponent({
 			this.store.methods.login();
 			this.store.methods.setUser(user.email || '');
 		});
+		window.addEventListener('scroll', this.dynamicNavbar);
+	},
+	unmounted() {
+		window.removeEventListener('scroll', this.dynamicNavbar);
 	},
 	data() {
 		return {
-			SITE_NAME: 'wchr-aun'
+			SITE_NAME: 'wchr-aun',
+			hideNavbar: false
 		};
+	},
+	methods: {
+		dynamicNavbar(event: Event) {
+			if (window.scrollY > 50) {
+				this.hideNavbar = true;
+			} else {
+				this.hideNavbar = false;
+			}
+		}
 	}
 });
 </script>
