@@ -11,81 +11,101 @@
 				class="border-2-2 absolute border-opacity-20 border-gray-400 h-full border"
 				style="left: 50%"
 			></div>
-			<template v-for="item in events" :key="item">
-				<div
-					v-for="idx in gridLength(item)"
-					:key="idx"
-					class="mb-8 flex justify-between items-center w-full"
-				>
-					<template
-						v-if="item.end && !extend.get(item.cover) && idx === Math.floor(gridLength(item) / 2)"
-					>
-						<div class="order-1 w-5/12"></div>
+			<template v-for="item in list" :key="item">
+				<transition appear name="slide-fade">
+					<div v-if="extend.get(item.cover) || item.parent">
 						<div
-							class="
-								z-10
-								flex
-								items-center
-								order-1
-								cursor-pointer
-								border-2
-								w-8
-								h-8
-								rounded-full
-								ml-0.5
-							"
-							@click="toggle(item.cover)"
+							v-for="idx in gridLength(item)"
+							:key="idx"
+							class="mb-8 flex justify-between items-center w-full"
 						>
-							<span class="mx-auto font-semibold text-lg text-gray-200">
-								<font-awesome-icon icon="ellipsis-v" />
-							</span>
+							<template
+								v-if="
+									item.end && !extend.get(item.cover) && idx === Math.floor(gridLength(item) / 2)
+								"
+							>
+								<div class="order-1 w-5/12"></div>
+								<div
+									class="
+										z-10
+										flex
+										items-center
+										order-1
+										cursor-pointer
+										border-2
+										w-8
+										h-8
+										rounded-full
+										ml-0.5
+										mt-4
+									"
+									@click="toggle(item.cover)"
+								>
+									<span class="mx-auto font-semibold text-lg text-gray-200">
+										<font-awesome-icon icon="angle-down" />
+									</span>
+								</div>
+								<div class="order-1 w-5/12"></div>
+							</template>
 						</div>
-						<div class="order-1 w-5/12"></div>
-					</template>
-				</div>
-				<div
-					class="mb-8 flex justify-between items-center w-full"
-					v-bind:class="{
-						'flex-row-reverse': item.position === 'left' && !(item.end && !extend.get(item.cover))
-					}"
-				>
-					<div class="order-1 w-5/12">
-						<p
-							class="text-gray-200 text-xs"
+						<div
+							class="mb-8 flex justify-between items-center w-full"
 							v-bind:class="{
-								'text-right': item.position === 'right' || (item.end && !extend.get(item.cover))
+								'flex-row-reverse':
+									item.position === 'left' && !(item.end && !extend.get(item.cover))
 							}"
 						>
-							{{ item.hint }}
-						</p>
+							<div class="order-1 w-5/12">
+								<p
+									class="text-gray-200 text-xs"
+									v-bind:class="{
+										'text-right': item.position === 'right' || (item.end && !extend.get(item.cover))
+									}"
+								>
+									{{ item.hint }}
+								</p>
+							</div>
+							<div
+								class="z-10 flex items-center order-1 bg-gray-200 shadow-xl w-8 h-8 rounded-full"
+								v-bind:class="{
+									'cursor-pointer': item.parent && !item.end && extend.get(item.cover)
+								}"
+								@click="toggle(item.cover)"
+							>
+								<span class="mx-auto font-semibold text-lg text-gray-800">
+									<font-awesome-icon
+										:icon="
+											item.parent && !item.end && extend.get(item.cover) ? 'angle-up' : item.icon
+										"
+									/>
+								</span>
+							</div>
+							<div
+								class="order-1 bg-gray-100 opacity-80 rounded-lg shadow-xl w-5/12 px-6 py-4 h-full"
+							>
+								<h3 class="mb-3 font-bold text-gray-800 text-xl">
+									{{ item.title }}
+								</h3>
+								<p
+									class="
+										text-sm
+										leading-snug
+										tracking-wide
+										text-gray-900 text-opacity-100
+										whitespace-pre-line
+										hidden
+										lg:block
+									"
+								>
+									{{ item.message }}
+									<template v-if="item.more">
+										<a class="text-xs underline text-blue-500" v-bind:href="item.more">more...</a>
+									</template>
+								</p>
+							</div>
+						</div>
 					</div>
-					<div class="z-10 flex items-center order-1 bg-gray-200 shadow-xl w-8 h-8 rounded-full">
-						<span class="mx-auto font-semibold text-lg text-gray-800">
-							<font-awesome-icon :icon="item.icon" />
-						</span>
-					</div>
-					<div class="order-1 bg-gray-100 opacity-80 rounded-lg shadow-xl w-5/12 px-6 py-4 h-full">
-						<h3 class="mb-3 font-bold text-gray-800 text-xl">
-							{{ item.title }}
-						</h3>
-						<p
-							class="
-								text-sm
-								leading-snug
-								tracking-wide
-								text-gray-900 text-opacity-100
-								whitespace-pre-line
-								hidden
-								lg:block
-							"
-						>
-							{{ item.message }}
-							<template v-if="item.more">
-								<a class="text-xs underline text-blue-500" v-bind:href="item.more">more...</a>
-							</template>
-						</p>
-					</div>
-				</div>
+				</transition>
 			</template>
 		</div>
 	</div>
@@ -111,9 +131,6 @@ export default defineComponent({
 		return { extend };
 	},
 	computed: {
-		events(): EventList[] {
-			return this.list.filter((v) => v.parent || this.extend.get(v.cover));
-		},
 		resetNeeded(): boolean {
 			return !Array.from(this.extend.values()).every((v) => !v);
 		}
@@ -131,3 +148,19 @@ export default defineComponent({
 	}
 });
 </script>
+
+<style>
+.slide-fade-enter-active {
+	transition: all 0.8s ease-out;
+}
+
+.slide-fade-leave-active {
+	transition: all 0.5s cubic-bezier(1, 1, 1, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+	transform: translateY(-80px);
+	opacity: 0;
+}
+</style>
