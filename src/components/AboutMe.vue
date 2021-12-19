@@ -4,8 +4,8 @@
 	</div>
 	<p class="text-center text-xl font-extrabold">Welcome to my personal site.<br /><br /></p>
 	<p class="text-center text-lg">
-		My name is Watcharin Sirinaovakul. You can also call me <span class="font-extrabold">Aun</span>,
-		it is my nickname.
+		My name is <span class="font-extrabold">Watcharin Sirinaovakul</span>. You can also call me
+		<span class="font-extrabold">Aun</span>, it is my nickname.
 	</p>
 	<br />
 	<p class="text-center text-lg">
