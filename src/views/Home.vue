@@ -165,15 +165,6 @@ export default defineComponent({
 				},
 				{
 					position: 'left',
-					title: 'test',
-					message: 'Left Accenture Thailand',
-					hint: 'Jul 2021',
-					icon: 'sign-out-alt',
-					grid: 6,
-					cover: 'acn'
-				},
-				{
-					position: 'left',
 					title: 'Left Accenture',
 					message: 'Left Accenture Thailand',
 					hint: 'Jul 2021',
