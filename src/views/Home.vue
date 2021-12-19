@@ -14,7 +14,7 @@
 	<hr class="p-4" />
 	<transition appear name="fade">
 		<div id="timeline">
-			<Timeline :list="timeline" :totalGrid="totalGrid" />
+			<Timeline :list="timeline" />
 		</div>
 	</transition>
 </template>
@@ -36,7 +36,6 @@ export default defineComponent({
 	components: { Timeline, AboutMe, ContactMe },
 	data() {
 		return {
-			totalGrid: 4,
 			timeline: [
 				{
 					position: 'left',
@@ -45,7 +44,9 @@ export default defineComponent({
 						'Being the first rank at the admission entrance in BE Computer Engineering, KMUTT.',
 					hint: 'Aug 2016',
 					icon: 'university',
-					grid: 0
+					grid: 0,
+					parent: true,
+					cover: 'undergrad'
 				},
 				{
 					position: 'right',
@@ -54,26 +55,26 @@ export default defineComponent({
 						'Solving big data problems in a limited time frame for the qualifying round. And analysing all given data and predicting the possible ways to improve the system for the final round.',
 					hint: 'Jan 2018',
 					icon: 'award',
-					grid: 4,
-					condense: true
+					grid: 10,
+					cover: 'undergrad'
 				},
 				{
-					position: 'left',
+					position: 'right',
 					title: 'Worked at Extosoft',
 					message: 'Worked at Extosoft as a part-time PHP developer',
 					hint: 'Jun 2018 - Jul 2018',
 					icon: 'briefcase',
-					grid: 4,
-					condense: true
+					grid: 5,
+					cover: 'undergrad'
 				},
 				{
-					position: 'left',
+					position: 'right',
 					title: 'Internship at NTU',
 					message: 'Internship at Nanyang Technological University as a Research Assistant',
 					hint: 'Jun 2019 - Jul 2019',
 					icon: 'briefcase',
-					grid: 4,
-					condense: true
+					grid: 10,
+					cover: 'undergrad'
 				},
 				{
 					position: 'right',
@@ -82,8 +83,8 @@ export default defineComponent({
 						"Building a marketplace application for trading recyclable wastes without needing the knowledge to use functions for checking waste types through a phone's camera. (Senior project related)",
 					hint: 'Feb 2020',
 					icon: 'award',
-					grid: 4,
-					condense: true
+					grid: 10,
+					cover: 'undergrad'
 				},
 				{
 					position: 'right',
@@ -92,7 +93,8 @@ export default defineComponent({
 						"Building a marketplace application for trading recyclable wastes without needing the knowledge to use functions for checking waste types through a phone's camera.",
 					hint: 'Jun 2020',
 					icon: 'award',
-					grid: 4
+					grid: 4,
+					cover: 'undergrad'
 				},
 				{
 					position: 'left',
@@ -101,7 +103,10 @@ export default defineComponent({
 						'Graduated with a second-class honour (GPAX 3.51/4.00).\nBeing among the top 15 students in the class during graduation.',
 					hint: 'Jun 2020',
 					icon: 'graduation-cap',
-					grid: 0
+					grid: 2,
+					parent: true,
+					end: true,
+					cover: 'undergrad'
 				},
 				{
 					position: 'left',
@@ -110,7 +115,9 @@ export default defineComponent({
 						'Started working at KBTG as a software engineer. Specifically worked on the frontend side of the project.',
 					hint: 'Jul 2020',
 					icon: 'briefcase',
-					grid: 1
+					grid: 1,
+					parent: true,
+					cover: 'kbtg'
 				},
 				{
 					position: 'right',
@@ -120,7 +127,8 @@ export default defineComponent({
 					more: 'https://ieeexplore.ieee.org/abstract/document/9245459/',
 					hint: 'Jul 2020',
 					icon: 'book',
-					grid: 0
+					grid: 0,
+					cover: 'kbtg'
 				},
 				{
 					position: 'right',
@@ -130,8 +138,8 @@ export default defineComponent({
 					more: 'https://jstopcoder.getlinks.com/',
 					hint: 'Dec 2020',
 					icon: 'award',
-					grid: 4,
-					condense: true
+					grid: 5,
+					cover: 'kbtg'
 				},
 				{
 					position: 'left',
@@ -139,7 +147,10 @@ export default defineComponent({
 					message: 'Left KBTG',
 					hint: 'Dec 2020',
 					icon: 'sign-out-alt',
-					grid: 0
+					grid: 0,
+					parent: true,
+					end: true,
+					cover: 'kbtg'
 				},
 				{
 					position: 'left',
@@ -148,7 +159,18 @@ export default defineComponent({
 						'Started working at Accenture Thailand as an application development analyst. Specifically worked on the frontend side of the project.',
 					hint: 'Jan 2021',
 					icon: 'briefcase',
-					grid: 1
+					grid: 1,
+					parent: true,
+					cover: 'acn'
+				},
+				{
+					position: 'left',
+					title: 'test',
+					message: 'Left Accenture Thailand',
+					hint: 'Jul 2021',
+					icon: 'sign-out-alt',
+					grid: 6,
+					cover: 'acn'
 				},
 				{
 					position: 'left',
@@ -156,8 +178,10 @@ export default defineComponent({
 					message: 'Left Accenture Thailand',
 					hint: 'Jul 2021',
 					icon: 'sign-out-alt',
-					grid: 4,
-					condense: true
+					grid: 6,
+					parent: true,
+					end: true,
+					cover: 'acn'
 				},
 				{
 					position: 'left',
@@ -165,7 +189,9 @@ export default defineComponent({
 					message: 'Studied MSc Computer Science at the University of Edinburgh',
 					hint: 'Sep 2021',
 					icon: 'university',
-					grid: 1
+					grid: 2,
+					parent: true,
+					cover: 'uoe'
 				},
 				{
 					position: 'left',
@@ -173,8 +199,10 @@ export default defineComponent({
 					message: 'To be graduate from the University of Edinburgh',
 					hint: 'Sep 2022',
 					icon: 'graduation-cap',
-					grid: 4,
-					condense: true
+					grid: 10,
+					parent: true,
+					end: true,
+					cover: 'uoe'
 				}
 			]
 		};
