@@ -11,9 +11,11 @@
 				class="border-2-2 absolute border-opacity-20 border-gray-400 h-full border"
 				style="left: 50%"
 			></div>
-			<template v-for="item in list" :key="item">
-				<transition appear name="slide-fade">
-					<div v-if="extend.get(item.cover) || item.parent">
+			<template v-for="item in events" :key="item">
+				<transition appear :name="item.parent ? 'parent-fade' : 'slide-fade'">
+					<div
+						v-if="(extend.get(item.cover) || item.parent) && (!item.end || !extend.get(item.cover))"
+					>
 						<div
 							class="flex justify-between items-center w-full"
 							:class="`pb-${gridLength(item)} pt-${gridLength(item)}`"
@@ -67,9 +69,7 @@
 							>
 								<span class="mx-auto font-semibold text-lg text-gray-800">
 									<font-awesome-icon
-										:icon="
-											item.parent && !item.end && extend.get(item.cover) ? 'angle-up' : item.icon
-										"
+										:icon="item.parent && extend.get(item.cover) ? 'angle-up' : item.icon"
 									/>
 								</span>
 							</div>
@@ -121,7 +121,15 @@ export default defineComponent({
 		Array.from(new Set(this.list.map((v) => v.cover))).forEach((v) => {
 			extend.set(v, false);
 		});
-		return { extend };
+		let events = this.list.flatMap((v) =>
+			v.end
+				? [
+						{ ...v, position: 'right', parent: false, end: false },
+						{ ...v, grid: 0 }
+				  ]
+				: v
+		);
+		return { extend, events };
 	},
 	computed: {
 		resetNeeded(): boolean {
@@ -151,7 +159,19 @@ export default defineComponent({
 }
 .slide-fade-enter-from,
 .slide-fade-leave-to {
-	transform: translateY(-120px);
+	transform: translateY(-100%);
+	opacity: 0;
+}
+
+.parent-fade-enter-active {
+	transition: all 1s ease-out;
+}
+.parent-fade-leave-active {
+	transition: all 0.8s cubic-bezier(1, 1, 1, 1);
+}
+.parent-fade-enter-from,
+.parent-fade-leave-to {
+	transform: translateY(100%);
 	opacity: 0;
 }
 </style>
