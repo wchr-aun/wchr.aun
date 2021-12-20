@@ -63,10 +63,10 @@ export default defineComponent({
 			this.store.methods.login();
 			this.store.methods.setUser(user.email || '');
 		});
-		window.addEventListener('scroll', this.dynamicNavbar);
+		// window.addEventListener('scroll', this.dynamicNavbar);
 	},
 	unmounted() {
-		window.removeEventListener('scroll', this.dynamicNavbar);
+		// window.removeEventListener('scroll', this.dynamicNavbar);
 	},
 	data() {
 		return {
