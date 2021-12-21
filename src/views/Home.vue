@@ -1,6 +1,28 @@
 <template>
 	<p class="text-2xl text-center font-bold pb-8">- Work In Progress -</p>
 	<transition appear name="fade">
+		<div class="flex items-center justify-center pb-8" id="welcome">
+			<div
+				:class="gaFound ? 'opacity-100' : 'opacity-0'"
+				class="text-4xl font-extrabold pb-12 transition-opacity-500ms"
+			>
+				Welcome to
+			</div>
+			<GAText
+				class="text-4xl font-extrabold text-center"
+				target="WCHR.AUN"
+				v-on:ga-found-target="toggle()"
+				v-on:ga-reset="toggle()"
+			/>
+			<div
+				:class="gaFound ? 'opacity-100' : 'opacity-0'"
+				class="text-4xl font-extrabold pb-12 transition-opacity-500ms"
+			>
+				: my Personal Website
+			</div>
+		</div>
+	</transition>
+	<transition appear name="fade">
 		<div class="pb-8" id="aboutme">
 			<AboutMe />
 		</div>
@@ -25,6 +47,7 @@ import { defineComponent } from 'vue';
 import Timeline from '@/components/Timeline.vue';
 import AboutMe from '@/components/AboutMe.vue';
 import ContactMe from '@/components/ContactMe.vue';
+import GAText from '@/components/GAText/GAText.vue';
 
 export default defineComponent({
 	setup() {
@@ -33,9 +56,15 @@ export default defineComponent({
 		});
 	},
 	name: 'Home',
-	components: { Timeline, AboutMe, ContactMe },
+	components: { Timeline, AboutMe, ContactMe, GAText },
+	methods: {
+		toggle() {
+			this.gaFound = !this.gaFound;
+		}
+	},
 	data() {
 		return {
+			gaFound: false,
 			timeline: [
 				{
 					position: 'left',
@@ -209,5 +238,11 @@ export default defineComponent({
 .fade-enter-from,
 .fade-leave-to {
 	opacity: 0;
+}
+
+.transition-opacity-500ms {
+	transition-property: opacity;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+	transition-duration: 0.5s;
 }
 </style>

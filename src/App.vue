@@ -6,9 +6,11 @@
 	</metainfo>
 	<div class="bg-svg">
 		<div class="flex flex-col min-h-screen">
-			<div class="w-full fixed transition-all top-0" v-bind:class="{ '-top-32': hideNavbar }">
-				<Header />
-			</div>
+			<transition name="nav-fade">
+				<div v-if="!hideNavbar" class="w-full fixed">
+					<Header />
+				</div>
+			</transition>
 			<div class="flex-grow p-2 md:p-8 text-gray-200 mt-32">
 				<router-view />
 			</div>
@@ -73,7 +75,7 @@ export default defineComponent({
 		};
 	},
 	methods: {
-		dynamicNavbar(event: Event): void {
+		dynamicNavbar(): void {
 			if (window.scrollY > 50) {
 				this.hideNavbar = true;
 			} else {
@@ -106,6 +108,18 @@ body {
 .arrow-slide-fade-enter-from,
 .arrow-slide-fade-leave-to {
 	transform: translateY(-20px);
+	opacity: 0;
+}
+
+.nav-fade-enter-active {
+	transition: all 0.5s ease-out;
+}
+.nav-fade-leave-active {
+	transition: all 0.2s cubic-bezier(1, 1, 1, 1);
+}
+.nav-fade-enter-from,
+.nav-fade-leave-to {
+	transform: translateY(-8rem);
 	opacity: 0;
 }
 </style>

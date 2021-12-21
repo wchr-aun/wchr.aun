@@ -11,19 +11,16 @@
 				class="border-2-2 absolute border-opacity-20 border-gray-400 h-full border"
 				style="left: 50%"
 			></div>
-			<template v-for="item in list" :key="item">
-				<transition appear name="slide-fade">
-					<div v-if="extend.get(item.cover) || item.parent">
+			<template v-for="item in events" :key="item">
+				<transition appear :name="item.parent ? 'parent-fade' : 'slide-fade'">
+					<div
+						v-if="(extend.get(item.cover) || item.parent) && (!item.end || !extend.get(item.cover))"
+					>
 						<div
-							v-for="idx in gridLength(item)"
-							:key="idx"
-							class="mb-8 flex justify-between items-center w-full"
+							class="flex justify-between items-center w-full"
+							:class="`pb-${gridLength(item)} pt-${gridLength(item)}`"
 						>
-							<template
-								v-if="
-									item.end && !extend.get(item.cover) && idx === Math.floor(gridLength(item) / 2)
-								"
-							>
+							<template v-if="item.end && !extend.get(item.cover)">
 								<div class="order-1 w-5/12"></div>
 								<div
 									class="
@@ -37,7 +34,6 @@
 										h-8
 										rounded-full
 										ml-0.5
-										mt-4
 									"
 									@click="toggle(item.cover)"
 								>
@@ -49,17 +45,16 @@
 							</template>
 						</div>
 						<div
-							class="mb-8 flex justify-between items-center w-full"
+							class="mt-8 mb-8 flex justify-between items-center w-full"
 							v-bind:class="{
-								'flex-row-reverse':
-									item.position === 'left' && !(item.end && !extend.get(item.cover))
+								'flex-row-reverse': item.position === 'left'
 							}"
 						>
 							<div class="order-1 w-5/12">
 								<p
 									class="text-gray-200 text-xs"
 									v-bind:class="{
-										'text-right': item.position === 'right' || (item.end && !extend.get(item.cover))
+										'text-right': item.position === 'right'
 									}"
 								>
 									{{ item.hint }}
@@ -74,9 +69,7 @@
 							>
 								<span class="mx-auto font-semibold text-lg text-gray-800">
 									<font-awesome-icon
-										:icon="
-											item.parent && !item.end && extend.get(item.cover) ? 'angle-up' : item.icon
-										"
+										:icon="item.parent && extend.get(item.cover) ? 'angle-up' : item.icon"
 									/>
 								</span>
 							</div>
@@ -128,7 +121,15 @@ export default defineComponent({
 		Array.from(new Set(this.list.map((v) => v.cover))).forEach((v) => {
 			extend.set(v, false);
 		});
-		return { extend };
+		let events = this.list.flatMap((v) =>
+			v.end
+				? [
+						{ ...v, position: 'right', parent: false, end: false },
+						{ ...v, grid: 0 }
+				  ]
+				: v
+		);
+		return { extend, events };
 	},
 	computed: {
 		resetNeeded(): boolean {
@@ -140,7 +141,7 @@ export default defineComponent({
 			this.extend.set(cover, !this.extend.get(cover));
 		},
 		gridLength(item: EventList): number {
-			return !this.extend.get(item.cover) && item.end ? 2 : item.grid;
+			return !this.extend.get(item.cover) && item.end ? 2 : item.grid * 2;
 		},
 		resetToggle(): void {
 			for (const [key, _] of this.extend.entries()) this.extend.set(key, false);
@@ -151,14 +152,26 @@ export default defineComponent({
 
 <style>
 .slide-fade-enter-active {
-	transition: all 0.8s ease-out;
+	transition: all 1s ease-out;
 }
 .slide-fade-leave-active {
-	transition: all 0.5s cubic-bezier(1, 1, 1, 1);
+	transition: all 0.8s cubic-bezier(1, 1, 1, 1);
 }
 .slide-fade-enter-from,
 .slide-fade-leave-to {
-	transform: translateY(-80px);
+	transform: translateY(-100%);
+	opacity: 0;
+}
+
+.parent-fade-enter-active {
+	transition: all 1s ease-out;
+}
+.parent-fade-leave-active {
+	transition: all 0.8s cubic-bezier(1, 1, 1, 1);
+}
+.parent-fade-enter-from,
+.parent-fade-leave-to {
+	transform: translateY(100%);
 	opacity: 0;
 }
 </style>
