@@ -1,5 +1,5 @@
 <template>
-	<div class="space-mono flex-col">
+	<div class="space-mono flex flex-col">
 		<div :class="clazz">{{ population.getBest() || initText }}</div>
 		<div class="flex gap-4 justify-center pt-4">
 			<button
@@ -19,18 +19,31 @@
 				<span :class="population.getBest() ? 'text-gray-800' : 'text-gray-200'"> Reset </span>
 			</button>
 		</div>
+		<div>
+			<transition appear name="fade">
+				<p class="text-xs ml-28 mt-4 absolute" v-if="!population.isFinished()">
+					<ExternalLink
+						link="https://github.com/wchr-aun/ga-search-string"
+						text="(Genetic Algorithm)"
+					/>
+				</p>
+			</transition>
+		</div>
 	</div>
 </template>
 
 <script>
 import { defineComponent } from 'vue';
 import { Population } from './Population';
+import ExternalLink from '@/components/ExternalLink.vue';
+
 export default defineComponent({
 	name: 'GAText',
 	props: {
 		target: String,
 		class: String
 	},
+	components: { ExternalLink },
 	data() {
 		return {
 			clazz: this.class,
@@ -73,5 +86,14 @@ export default defineComponent({
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono&display=swap');
 .space-mono {
 	font-family: 'Space Mono', monospace;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+	transition: opacity 0.3s;
+}
+.fade-enter-from,
+.fade-leave-to {
+	opacity: 0;
 }
 </style>
