@@ -21,7 +21,7 @@
 		</div>
 		<div>
 			<transition appear name="fade">
-				<p class="text-xs ml-28 mt-4 fixed" v-if="!population.isFinished()">
+				<p class="text-xs ml-28 mt-4 absolute" v-if="!population.isFinished()">
 					<ExternalLink
 						link="https://github.com/wchr-aun/ga-search-string"
 						text="(Genetic Algorithm)"
