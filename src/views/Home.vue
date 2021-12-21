@@ -2,7 +2,19 @@
 	<p class="text-md lg:text-2xl text-center font-bold pb-8">## Work In Progress ##</p>
 	<transition appear name="fade">
 		<div
-			class="flex flex-col lg:flex-row px-4 items-center justify-center pb-8 gap-8 lg:gap-2"
+			class="
+				flex flex-col
+				lg:flex-row
+				px-4
+				items-center
+				justify-center
+				pb-8
+				gap-8
+				lg:gap-2
+				transition-all
+				duration-500
+			"
+			v-bind:class="{ 'transform translate-y-24': !gaFound }"
 			id="welcome"
 		>
 			<div
