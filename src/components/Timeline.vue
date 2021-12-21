@@ -67,7 +67,10 @@
 								}"
 								@click="item.parent && !item.end && extend.get(item.cover) && toggle(item.cover)"
 							>
-								<span class="mx-auto font-semibold text-lg text-gray-800">
+								<span
+									class="mx-auto font-semibold text-lg text-gray-800"
+									v-bind:class="{ 'animate-bounce mt-2': item.parent && extend.get(item.cover) }"
+								>
 									<font-awesome-icon
 										:icon="item.parent && extend.get(item.cover) ? 'angle-up' : item.icon"
 									/>
@@ -164,14 +167,10 @@ export default defineComponent({
 }
 
 .parent-fade-enter-active {
-	transition: all 1s ease-out;
+	transition: all 1.5s ease-out;
 }
-.parent-fade-leave-active {
-	transition: all 0.8s cubic-bezier(1, 1, 1, 1);
-}
-.parent-fade-enter-from,
-.parent-fade-leave-to {
-	transform: translateY(100%);
+.parent-fade-enter-from {
+	transform: translateY(150%);
 	opacity: 0;
 }
 </style>
