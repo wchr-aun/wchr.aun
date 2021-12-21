@@ -14,8 +14,8 @@
 			<GAText
 				class="text-4xl font-extrabold text-center"
 				target="WCHR.AUN"
-				v-on:ga-found-target="toggle()"
-				v-on:ga-reset="toggle()"
+				v-on:ga-found-target="toggle(true)"
+				v-on:ga-reset="toggle(false)"
 			/>
 			<div
 				:class="gaFound ? 'opacity-100' : 'opacity-0'"
@@ -61,8 +61,8 @@ export default defineComponent({
 	name: 'Home',
 	components: { Timeline, AboutMe, ContactMe, GAText },
 	methods: {
-		toggle() {
-			this.gaFound = !this.gaFound;
+		toggle(v: boolean) {
+			this.gaFound = v;
 		}
 	},
 	data() {

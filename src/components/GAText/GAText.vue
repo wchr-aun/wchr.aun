@@ -4,16 +4,20 @@
 		<div class="flex gap-4 justify-center pt-4">
 			<button
 				class="py-1 rounded-md bg-gray-200 text-gray-800 text-center w-32 cursor-pointer"
-				:class="population.isFinished() ? 'bg-gray-400 cursor-not-allowed' : 'animate-bounce'"
-				:disabled="population.isFinished()"
+				:class="
+					population.isFinished() || processing
+						? 'bg-gray-400 cursor-not-allowed'
+						: 'animate-bounce'
+				"
+				:disabled="population.isFinished() || processing"
 				@click="evolve()"
 			>
 				<span :class="!population.isFinished() ? 'text-gray-800' : 'text-gray-200'"> Evolve! </span>
 			</button>
 			<button
 				class="py-1 rounded-md bg-gray-200 text-gray-800 text-center w-32 cursor-pointer"
-				v-bind:class="{ 'bg-gray-400 cursor-not-allowed': !population.getBest() }"
-				:disabled="!population.getBest()"
+				v-bind:class="{ 'bg-gray-400 cursor-not-allowed': !population.getBest() || processing }"
+				:disabled="!population.getBest() || processing"
 				@click="reset()"
 			>
 				<span :class="population.getBest() ? 'text-gray-800' : 'text-gray-200'"> Reset </span>
@@ -50,13 +54,15 @@ export default defineComponent({
 			initText: '_'.repeat(this.target.length),
 			text: '_'.repeat(this.target.length),
 			population: new Population(this.target, 1, 0.01, 200),
-			triggered: false
+			triggered: false,
+			processing: false
 		};
 	},
 	methods: {
 		async evolve() {
 			for (let i = 0; i < 50; i++) {
 				setTimeout(() => {
+					this.processing = i != 49;
 					if (this.population.isFinished()) {
 						this.emit();
 						return;
