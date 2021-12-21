@@ -76,7 +76,7 @@
 							<div
 								class="order-1 bg-gray-100 opacity-80 rounded-lg shadow-xl w-5/12 px-6 py-4 h-full"
 							>
-								<h3 class="mb-3 font-bold text-gray-800 text-xl">
+								<h3 class="lg:mb-3 font-bold text-gray-800 text-sm lg:text-xl">
 									{{ item.title }}
 								</h3>
 								<p
