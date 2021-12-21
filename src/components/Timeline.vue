@@ -14,7 +14,13 @@
 			<template v-for="item in events" :key="item">
 				<transition appear :name="item.parent ? 'parent-fade' : 'slide-fade'">
 					<div
-						v-if="(extend.get(item.cover) || item.parent) && (!item.end || !extend.get(item.cover))"
+						v-bind:class="{
+							hidden:
+								!(extend.get(item.cover) || item.parent) || !(!item.end || !extend.get(item.cover))
+						}"
+						v-show="
+							(extend.get(item.cover) || item.parent) && (!item.end || !extend.get(item.cover))
+						"
 					>
 						<div
 							class="flex justify-between items-center w-full"
@@ -167,10 +173,16 @@ export default defineComponent({
 }
 
 .parent-fade-enter-active {
-	transition: all 1.5s ease-out;
+	transition: all 1s ease-out;
+}
+.parent-fade-leave-active {
+	transition: all 0ms;
+}
+.parent-fade-leave-to {
+	opacity: 0;
 }
 .parent-fade-enter-from {
-	transform: translateY(150%);
+	transform: translateY(40%);
 	opacity: 0;
 }
 </style>

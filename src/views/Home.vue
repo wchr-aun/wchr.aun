@@ -7,7 +7,7 @@
 		>
 			<div
 				:class="gaFound ? 'opacity-100' : 'opacity-0'"
-				class="text-4xl font-extrabold lg:pb-12 transition-opacity-500ms"
+				class="text-4xl font-extrabold lg:pb-12 transition-all duration-500"
 			>
 				Welcome to
 			</div>
@@ -19,28 +19,46 @@
 			/>
 			<div
 				:class="gaFound ? 'opacity-100' : 'opacity-0'"
-				class="text-4xl font-extrabold lg:pb-12 transition-opacity-500ms text-center lg:text-left"
+				class="
+					text-4xl
+					font-extrabold
+					lg:pb-12
+					transition-all
+					duration-500
+					delay-150
+					text-center
+					lg:text-left
+				"
 			>
 				: my Personal Website
 			</div>
 		</div>
 	</transition>
+
 	<transition appear name="fade">
 		<div class="pb-8" id="aboutme">
 			<AboutMe />
 		</div>
 	</transition>
 	<hr class="p-4" />
-	<div class="transition-opacity-500ms" v-bind:class="{ 'opacity-0': !reachContactMe }">
-		<div class="pb-8" id="contact" ref="contact">
-			<ContactMe />
-		</div>
+
+	<div
+		class="transition-all duration-500 pb-8"
+		id="contact"
+		ref="contact"
+		v-bind:class="{ 'opacity-0 transform translate-y-4': !reachContactMe }"
+	>
+		<ContactMe />
 	</div>
 	<hr class="p-4" />
-	<div class="transition-opacity-500ms" v-bind:class="{ 'opacity-0': !reachTimeline }">
-		<div id="timeline" ref="timeline">
-			<Timeline :list="timeline" />
-		</div>
+
+	<div
+		id="timeline"
+		ref="timeline"
+		class="transition-all duration-500 pb-8"
+		v-bind:class="{ 'opacity-0 transform translate-y-4': !reachTimeline }"
+	>
+		<Timeline v-show="!reachTimeline" :list="timeline" />
 	</div>
 </template>
 
@@ -264,11 +282,5 @@ export default defineComponent({
 .fade-enter-from,
 .fade-leave-to {
 	opacity: 0;
-}
-
-.transition-opacity-500ms {
-	transition-property: opacity;
-	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-	transition-duration: 0.5s;
 }
 </style>
