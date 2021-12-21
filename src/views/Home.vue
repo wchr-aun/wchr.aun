@@ -31,17 +31,17 @@
 		</div>
 	</transition>
 	<hr class="p-4" />
-	<transition appear name="fade">
-		<div class="pb-8" id="contact">
+	<div class="transition-opacity-500ms" v-bind:class="{ 'opacity-0': !reachContactMe }">
+		<div class="pb-8" id="contact" ref="contact">
 			<ContactMe />
 		</div>
-	</transition>
+	</div>
 	<hr class="p-4" />
-	<transition appear name="fade">
-		<div id="timeline">
+	<div class="transition-opacity-500ms" v-bind:class="{ 'opacity-0': !reachTimeline }">
+		<div id="timeline" ref="timeline">
 			<Timeline :list="timeline" />
 		</div>
-	</transition>
+	</div>
 </template>
 
 <script lang="ts">
@@ -60,14 +60,37 @@ export default defineComponent({
 	},
 	name: 'Home',
 	components: { Timeline, AboutMe, ContactMe, GAText },
+	created() {
+		window.addEventListener('scroll', this.dynamicContent);
+	},
+	unmounted() {
+		window.removeEventListener('scroll', this.dynamicContent);
+	},
 	methods: {
 		toggle(v: boolean) {
 			this.gaFound = v;
+		},
+		dynamicContent(): void {
+			let contact = this.$refs.contact as HTMLElement;
+			let timeline = this.$refs.timeline as HTMLElement;
+			let height = screen.height;
+			if (contact.getBoundingClientRect().y < height / 2) {
+				this.reachContactMe = true;
+			} else {
+				this.reachContactMe = false;
+			}
+			if (timeline.getBoundingClientRect().y < height / 2) {
+				this.reachTimeline = true;
+			} else {
+				this.reachTimeline = false;
+			}
 		}
 	},
 	data() {
 		return {
 			gaFound: false,
+			reachContactMe: false,
+			reachTimeline: false,
 			timeline: [
 				{
 					position: 'left',
