@@ -25,7 +25,7 @@
 					<ExternalLink
 						link="https://github.com/wchr-aun/ga-search-string"
 						text="(Genetic Algorithm)"
-					></ExternalLink>
+					/>
 				</p>
 			</transition>
 		</div>
