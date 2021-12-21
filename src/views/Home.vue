@@ -1,7 +1,10 @@
 <template>
-	<p class="text-2xl text-center font-bold pb-8">- Work In Progress -</p>
+	<p class="text-md lg:text-2xl text-center font-bold pb-8">## Work In Progress ##</p>
 	<transition appear name="fade">
-		<div class="flex flex-col lg:flex-row px-4 items-center justify-center pb-8 gap-4" id="welcome">
+		<div
+			class="flex flex-col lg:flex-row px-4 items-center justify-center pb-8 gap-8 lg:gap-2"
+			id="welcome"
+		>
 			<div
 				:class="gaFound ? 'opacity-100' : 'opacity-0'"
 				class="text-4xl font-extrabold lg:pb-12 transition-opacity-500ms"
