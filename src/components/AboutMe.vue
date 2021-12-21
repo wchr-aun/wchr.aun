@@ -2,7 +2,6 @@
 	<div class="pb-4">
 		<router-link class="uppercase text-2xl font-bold" to="#aboutme"> # About Me </router-link>
 	</div>
-	<p class="text-center text-xl font-extrabold">Welcome to my personal site.<br /><br /></p>
 	<p class="text-center text-lg">
 		My name is <span class="font-extrabold">Watcharin Sirinaovakul</span>. You can also call me
 		<span class="font-extrabold">Aun</span>, it is my nickname.
