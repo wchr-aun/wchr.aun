@@ -2,64 +2,80 @@
 	<p class="text-md lg:text-2xl text-center font-bold pb-8">## Work In Progress ##</p>
 	<transition appear name="fade">
 		<div
-			class="flex flex-col lg:flex-row px-4 items-center justify-center pb-8 gap-8 lg:gap-2"
+			class="transition-all duration-500 flex flex-col items-center"
+			v-bind:class="{ 'transform translate-y-24': !gaFound }"
 			id="welcome"
 		>
-			<div
-				:class="gaFound ? 'opacity-100' : 'opacity-0'"
-				class="text-4xl font-extrabold lg:pb-12 transition-all duration-500"
-			>
-				Welcome to
+			<div class="flex flex-col lg:flex-row px-4 items-center justify-center pb-8 gap-8 lg:gap-2">
+				<div
+					:class="gaFound ? 'opacity-100' : 'opacity-0'"
+					class="text-4xl font-extrabold lg:pb-12 transition-all duration-500"
+				>
+					Welcome to
+				</div>
+				<GAText
+					class="text-4xl font-extrabold text-center"
+					target="WCHR.AUN"
+					v-on:ga-found-target="toggle(true)"
+					v-on:ga-reset="toggle(false)"
+				/>
+				<div
+					:class="gaFound ? 'opacity-100' : 'opacity-0'"
+					class="
+						text-4xl
+						font-extrabold
+						lg:pb-12
+						transition-all
+						duration-500
+						delay-150
+						text-center
+						lg:text-left
+					"
+				>
+					: my Personal Website
+				</div>
 			</div>
-			<GAText
-				class="text-4xl font-extrabold text-center"
-				target="WCHR.AUN"
-				v-on:ga-found-target="toggle(true)"
-				v-on:ga-reset="toggle(false)"
-			/>
-			<div
-				:class="gaFound ? 'opacity-100' : 'opacity-0'"
-				class="
-					text-4xl
-					font-extrabold
-					lg:pb-12
-					transition-all
-					duration-500
-					delay-150
-					text-center
-					lg:text-left
-				"
-			>
-				: my Personal Website
+			<div class="py-8">
+				<div class="text-4xl animate-bounce py-4 flex gap-2" v-show="gaFound">
+					<font-awesome-icon icon="angle-down" />
+				</div>
 			</div>
 		</div>
 	</transition>
 
-	<transition appear name="fade">
-		<div class="pb-8" id="aboutme">
-			<AboutMe />
+	<div v-if="gaFound">
+		<transition appear name="fade">
+			<div class="pb-8" id="aboutme" ref="aboutme">
+				<AboutMe />
+			</div>
+		</transition>
+		<hr class="p-4" />
+
+		<div id="contact" ref="contact">
+			<div
+				class="transition-all duration-500 pb-8"
+				v-bind:class="{ 'opacity-0 transform translate-y-4': !reachContactMe }"
+			>
+				<ContactMe />
+			</div>
+		</div>
+		<hr class="p-4" />
+
+		<div id="timeline" ref="timeline">
+			<div
+				class="transition-all duration-500 pb-8"
+				v-bind:class="{ 'opacity-0 transform translate-y-4': !reachTimeline }"
+			>
+				<Timeline v-show="!reachTimeline" :list="timeline" />
+			</div>
+		</div>
+	</div>
+
+	<transition name="arrow-slide-fade">
+		<div class="fixed bottom-16 right-2 lg:right-8 z-auto" v-if="hideNavbar">
+			<Menu :menu="menu" v-on:to-menu="goTo($event)" />
 		</div>
 	</transition>
-	<hr class="p-4" />
-
-	<div
-		class="transition-all duration-500 pb-8"
-		id="contact"
-		ref="contact"
-		v-bind:class="{ 'opacity-0 transform translate-y-4': !reachContactMe }"
-	>
-		<ContactMe />
-	</div>
-	<hr class="p-4" />
-
-	<div
-		id="timeline"
-		ref="timeline"
-		class="transition-all duration-500 pb-8"
-		v-bind:class="{ 'opacity-0 transform translate-y-4': !reachTimeline }"
-	>
-		<Timeline v-show="!reachTimeline" :list="timeline" />
-	</div>
 </template>
 
 <script lang="ts">
@@ -69,6 +85,7 @@ import Timeline from '@/components/Timeline.vue';
 import AboutMe from '@/components/AboutMe.vue';
 import ContactMe from '@/components/ContactMe.vue';
 import GAText from '@/components/GAText/GAText.vue';
+import Menu from '@/components/Menu.vue';
 
 export default defineComponent({
 	setup() {
@@ -77,7 +94,8 @@ export default defineComponent({
 		});
 	},
 	name: 'Home',
-	components: { Timeline, AboutMe, ContactMe, GAText },
+	components: { Timeline, AboutMe, ContactMe, GAText, Menu },
+	props: ['hideNavbar'],
 	created() {
 		window.addEventListener('scroll', this.dynamicContent);
 	},
@@ -87,6 +105,10 @@ export default defineComponent({
 	methods: {
 		toggle(v: boolean) {
 			this.gaFound = v;
+		},
+		goTo(v: string) {
+			let el = this.$refs[v] as HTMLElement;
+			el.scrollIntoView({ behavior: 'smooth' });
 		},
 		dynamicContent(): void {
 			let contact = this.$refs.contact as HTMLElement;
@@ -106,6 +128,11 @@ export default defineComponent({
 	},
 	data() {
 		return {
+			menu: [
+				{ label: 'About Me', val: 'aboutme' },
+				{ label: 'Contact Me', val: 'contact' },
+				{ label: 'Timeline', val: 'timeline' }
+			],
 			gaFound: false,
 			reachContactMe: false,
 			reachTimeline: false,
