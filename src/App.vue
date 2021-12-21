@@ -12,33 +12,10 @@
 				</div>
 			</transition>
 			<div class="flex-grow p-2 md:p-8 text-gray-200 mt-32">
-				<router-view />
+				<router-view :hideNavbar="hideNavbar" />
 			</div>
 			<Footer />
 		</div>
-		<transition name="arrow-slide-fade">
-			<div
-				@click="goToTop()"
-				v-if="hideNavbar"
-				class="
-					w-10
-					h-10
-					rounded-full
-					fixed
-					bg-gray-500
-					bottom-6
-					right-8
-					flex
-					items-center
-					justify-center
-					cursor-pointer
-					shadow-xl
-					text-xl text-gray-200
-				"
-			>
-				<font-awesome-icon class="-mt-0.5" icon="angle-up" />
-			</div>
-		</transition>
 	</div>
 </template>
 
@@ -81,9 +58,6 @@ export default defineComponent({
 			} else {
 				this.hideNavbar = false;
 			}
-		},
-		goToTop(): void {
-			window.scrollTo({ top: 0, behavior: 'smooth' });
 		}
 	}
 });

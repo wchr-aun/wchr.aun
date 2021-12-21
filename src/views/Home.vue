@@ -35,31 +35,39 @@
 		</div>
 	</transition>
 
-	<transition appear name="fade">
-		<div class="pb-8" id="aboutme">
-			<AboutMe />
+	<div v-if="gaFound">
+		<transition appear name="fade">
+			<div class="pb-8" id="aboutme" ref="aboutme">
+				<AboutMe />
+			</div>
+		</transition>
+		<hr class="p-4" />
+
+		<div id="contact" ref="contact">
+			<div
+				class="transition-all duration-500 pb-8"
+				v-bind:class="{ 'opacity-0 transform translate-y-4': !reachContactMe }"
+			>
+				<ContactMe />
+			</div>
+		</div>
+		<hr class="p-4" />
+
+		<div id="timeline" ref="timeline">
+			<div
+				class="transition-all duration-500 pb-8"
+				v-bind:class="{ 'opacity-0 transform translate-y-4': !reachTimeline }"
+			>
+				<Timeline v-show="!reachTimeline" :list="timeline" />
+			</div>
+		</div>
+	</div>
+
+	<transition name="arrow-slide-fade">
+		<div class="fixed bottom-6 right-8" v-if="hideNavbar">
+			<Menu :menu="menu" v-on:to-menu="goTo($event)" />
 		</div>
 	</transition>
-	<hr class="p-4" />
-
-	<div
-		class="transition-all duration-500 pb-8"
-		id="contact"
-		ref="contact"
-		v-bind:class="{ 'opacity-0 transform translate-y-4': !reachContactMe }"
-	>
-		<ContactMe />
-	</div>
-	<hr class="p-4" />
-
-	<div
-		id="timeline"
-		ref="timeline"
-		class="transition-all duration-500 pb-8"
-		v-bind:class="{ 'opacity-0 transform translate-y-4': !reachTimeline }"
-	>
-		<Timeline v-show="!reachTimeline" :list="timeline" />
-	</div>
 </template>
 
 <script lang="ts">
@@ -69,6 +77,7 @@ import Timeline from '@/components/Timeline.vue';
 import AboutMe from '@/components/AboutMe.vue';
 import ContactMe from '@/components/ContactMe.vue';
 import GAText from '@/components/GAText/GAText.vue';
+import Menu from '@/components/Menu.vue';
 
 export default defineComponent({
 	setup() {
@@ -77,7 +86,8 @@ export default defineComponent({
 		});
 	},
 	name: 'Home',
-	components: { Timeline, AboutMe, ContactMe, GAText },
+	components: { Timeline, AboutMe, ContactMe, GAText, Menu },
+	props: ['hideNavbar'],
 	created() {
 		window.addEventListener('scroll', this.dynamicContent);
 	},
@@ -87,6 +97,10 @@ export default defineComponent({
 	methods: {
 		toggle(v: boolean) {
 			this.gaFound = v;
+		},
+		goTo(v: string) {
+			let el = this.$refs[v] as HTMLElement;
+			el.scrollIntoView({ behavior: 'smooth' });
 		},
 		dynamicContent(): void {
 			let contact = this.$refs.contact as HTMLElement;
@@ -106,6 +120,11 @@ export default defineComponent({
 	},
 	data() {
 		return {
+			menu: [
+				{ label: 'About Me', val: 'aboutme' },
+				{ label: 'Contact Me', val: 'contact' },
+				{ label: 'Timeline', val: 'timeline' }
+			],
 			gaFound: false,
 			reachContactMe: false,
 			reachTimeline: false,
