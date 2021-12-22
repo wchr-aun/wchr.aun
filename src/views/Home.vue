@@ -1,9 +1,10 @@
 <template>
-	<p class="text-md lg:text-2xl text-center font-bold pb-8">## Work In Progress ##</p>
+	<p class="text-md lg:text-2xl text-center font-bold">## WIP ##</p>
+	<p class="text-xs lg:sm text-center pb-8">(working on the backend and the db)</p>
 	<transition appear name="fade">
 		<div
-			class="transition-all duration-500 flex flex-col items-center"
-			v-bind:class="{ 'transform translate-y-24': !gaFound }"
+			class="transition-all duration-500 flex flex-col items-center pt-4"
+			v-bind:class="{ 'transform translate-y-24': !gaFound, 'delay-700': gaFound }"
 			id="welcome"
 		>
 			<div class="flex flex-col lg:flex-row px-4 items-center justify-center pb-8 gap-8 lg:gap-2">
@@ -26,8 +27,7 @@
 						font-extrabold
 						lg:pb-12
 						transition-all
-						duration-500
-						delay-150
+						duration-1000
 						text-center
 						lg:text-left
 					"
@@ -36,7 +36,11 @@
 				</div>
 			</div>
 			<div class="py-8">
-				<div class="text-4xl animate-bounce py-4 flex gap-2" v-show="gaFound">
+				<div
+					class="text-4xl animate-bounce py-4 flex gap-2 transition-opacity duration-500"
+					v-show="gaFound"
+					v-bind:class="{ 'opacity-0': hideNavbar }"
+				>
 					<font-awesome-icon icon="angle-down" />
 				</div>
 			</div>
@@ -45,7 +49,12 @@
 
 	<div v-if="gaFound">
 		<transition appear name="fade">
-			<div class="pb-8" id="aboutme" ref="aboutme">
+			<div
+				class="pb-8 transition-opacity duration-1000 delay-1000"
+				id="aboutme"
+				ref="aboutme"
+				v-bind:class="{ 'opacity-0': !gaFound }"
+			>
 				<AboutMe />
 			</div>
 		</transition>
@@ -128,6 +137,7 @@ export default defineComponent({
 	},
 	data() {
 		return {
+			readme: 'placeholder here',
 			menu: [
 				{ label: 'About Me', val: 'aboutme' },
 				{ label: 'Contact Me', val: 'contact' },
