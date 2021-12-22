@@ -90,7 +90,6 @@
 <script lang="ts">
 import { useMeta } from 'vue-meta';
 import { defineComponent } from 'vue';
-import { getProjectReadMe } from '@/api/github-readme';
 import Timeline from '@/components/Timeline.vue';
 import AboutMe from '@/components/AboutMe.vue';
 import ContactMe from '@/components/ContactMe.vue';
