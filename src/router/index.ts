@@ -8,6 +8,10 @@ const routes: Array<RouteRecordRaw> = [
 		component: Home
 	},
 	{
+		path: '/me',
+		redirect: '/'
+	},
+	{
 		path: '/login',
 		name: 'Login',
 		// route level code-splitting
